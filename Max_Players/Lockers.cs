@@ -14,8 +14,7 @@ namespace Max_Players
     //    }
     //}
     // Token: 0x02000004 RID: 4
-    [HarmonyPatch(typeof(PLTabMenu))]
-    [HarmonyPatch("OnClickPID")]
+    [HarmonyPatch(typeof(PLTabMenu), "OnClickPID")]
     internal class Lockers
     {
     	// Token: 0x06000005 RID: 5 RVA: 0x000021B0 File Offset: 0x000003B0
@@ -47,7 +46,7 @@ namespace Max_Players
     					{
     						PLPlayer playerOwner = __instance.TargetContainer.PlayerOwner;
                             bool flag4 = playerOwner == PLNetworkManager.Instance.LocalPlayer || PLGlobal.Instance.ClassColors[PLNetworkManager.Instance.LocalPlayer.GetClassID()] == __instance.TargetContainer.Color || PLNetworkManager.Instance.LocalPlayer.GetClassID() == 0 || PLServer.Instance.ResearchLockerInventory == __instance.TargetContainer;
-                            //Vanilla:   playerOwner == PLNetworkManager.Instance.LocalPlayer || PLNetworkManager.Instance.LocalPlayer.GetClassID() == 0 || PLServer.Instance.ResearchLockerInventory == this.TargetContainer
+                            //Vanilla:   playerOwner == PLNetworkManager.Instance.LocalPlayer || PLNetworkManager.Instance.LocalPlayer.GetClassID() == 0 || PLServer.Instance.ResearchLockerInventory == __instance.TargetContainer
                             if (flag4)
     						{
     							__instance.TargetContainer.photonView.RPC("ServerItemSwap", PhotonTargets.All, new object[]
@@ -67,4 +66,4 @@ namespace Max_Players
     		}
     	}
     }
-   }
+}

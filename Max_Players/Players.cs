@@ -4,8 +4,7 @@ using HarmonyLib;
 namespace Max_Players
 {
 	// Token: 0x02000005 RID: 5
-	[HarmonyPatch(typeof(PhotonNetwork))]
-	[HarmonyPatch("CreateRoom")]
+	[HarmonyPatch(typeof(PhotonNetwork), "CreateRoom")]
 	[HarmonyPatch(new Type[]
 	{
 		typeof(string),
@@ -15,9 +14,9 @@ namespace Max_Players
 	internal class Players
 	{
 		// Token: 0x06000007 RID: 7 RVA: 0x000023A5 File Offset: 0x000005A5
-		private static void Prefix(ref RoomOptions roomOptions)
+		/*private static void Prefix(ref RoomOptions roomOptions)
 		{
 			roomOptions.maxPlayers = (byte)Global.MaxPlayers;
-		}
+		}*/
 	}
 }

@@ -6,17 +6,18 @@ using UnityEngine;
 namespace Max_Players
 {
     // Token: 0x02000003 RID: 3
-    [HarmonyPatch(typeof(PLServer))]
-    [HarmonyPatch("SetPlayerAsClassID")]
+    [HarmonyPatch(typeof(PLServer), "SetPlayerAsClassID")]
     internal class Classes
     {
         // Token: 0x06000003 RID: 3 RVA: 0x00002070 File Offset: 0x00000270
         private static bool Prefix(PLServer __instance, ref int playerID, ref int classID, ref List<PLPlayer> ___LocalCachedPlayerByClass)
         {
+            //runs vanilla if client isn't hosting
             if(!PhotonNetwork.isMasterClient)
             {
-                return true;
+                return false;
             }
+            //fails if client trying to be class -1 through 4
             if (classID > 4 || classID < -1)
             {
                 return false;
