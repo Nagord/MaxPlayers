@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PulsarPluginLoader.Utilities;
+using System;
 
 namespace Max_Players
 {
@@ -38,6 +39,14 @@ namespace Max_Players
                     playercount[ScannedPlayer.GetClassID() + 1]++;
                 }
             }
+        }
+        public static bool CanJoinClass(int classID)
+        {
+            if (classID == -1 || Global.playercount[classID + 1] < Global.rolelimits[classID])
+            {
+                return true;
+            }
+            else return false;
         }
     }
 }

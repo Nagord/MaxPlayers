@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
+using Oculus.Platform.Samples.VrHoops;
+using PulsarPluginLoader.Utilities;
 using UnityEngine;
 
 namespace Max_Players
@@ -30,25 +32,29 @@ namespace Max_Players
             if (PlayerFromID != null)
             {
                 Global.Generateplayercount();
-                if (classID == -1 || Global.playercount[classID + 1] < Global.rolelimits[classID] && PlayerFromID.GetClassID() != classID)
+                if (Global.CanJoinClass(classID) && PlayerFromID.GetClassID() != classID)
                 {
                     //sends the classchangemessage, sets the player to the class id
                     PlayerFromID.SetClassID(classID);
                     MethodInfo classchangemessage = AccessTools.Method(__instance.GetType(), "ClassChangeMessage", null, null);
                     classchangemessage.Invoke(__instance, new object[] { PlayerFromID.GetPlayerName(false), classID });
-                    //PLServer.Instance.AddNotification($"current count : Capacity: \nCap {playercount[1]} : {Global.rolelimits[0]} Pil {playercount[2]} : {Global.rolelimits[1]} \nSci {playercount[3]} : {Global.rolelimits[2]} Wep {playercount[4]} : {Global.rolelimits[3]} Eng {playercount[5]} : {Global.rolelimits[4]}",
-                    //PLNetworkManager.Instance.LocalPlayerID, PLServer.Instance.GetEstimatedServerMs() + 6000, false);
                 }
                 else
                 {
-
-                    PLServer.Instance.photonView.RPC("AddCrewWarning", PlayerFromID.GetPhotonPlayer(), new object[]
+                    string options = "";
+                    for (int classid = 0; classid <5; classid++)
                     {
-                        "That slot is full, choose another one.",
-                        new Color(1f, 1f, 1f),
-                        0,
-                        "ROL"
-                    });
+                        if(Global.CanJoinClass(classid))
+                        {
+                            options += $"{PLPlayer.GetClassNameFromID(classid)}\n";
+                        }
+                    }
+                    if (string.IsNullOrEmpty(options))
+                    {
+                        options = "none";
+                    }
+                    Messaging.Centerprint(PlayerFromID, "ROL", "That slot is full, choose another one. options on the left", new Color(1f, 1f, 1f));
+                    Messaging.Notification(options, PlayerFromID, playerID, 10000);
                 }
             }
             return false;
