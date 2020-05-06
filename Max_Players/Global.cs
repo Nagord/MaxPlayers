@@ -1,7 +1,4 @@
-﻿using PulsarPluginLoader.Utilities;
-using System;
-
-namespace Max_Players
+﻿namespace Max_Players
 {
     class Global
     {

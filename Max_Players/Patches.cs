@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
-using Oculus.Platform.Samples.VrHoops;
 using PulsarPluginLoader.Utilities;
 using UnityEngine;
 
@@ -53,8 +52,9 @@ namespace Max_Players
                     {
                         options = "none";
                     }
-                    Messaging.Centerprint(PlayerFromID, "ROL", "That slot is full, choose another one. options on the left", new Color(1f, 1f, 1f));
+                    Messaging.Centerprint("That slot is full, choose another one. options on the left", PlayerFromID, "ROL", PLPlayer.GetClassColorFromID(classID), EWarningType.E_RACE_WIN);
                     Messaging.Notification(options, PlayerFromID, playerID, 10000);
+                    Messaging.Notification($"Player {PlayerFromID.GetPlayerName()} Is trying to join as {PLPlayer.GetClassNameFromID(classID)}");
                 }
             }
             return false;
