@@ -2,7 +2,6 @@
 using System.Reflection;
 using HarmonyLib;
 using PulsarPluginLoader.Utilities;
-using UnityEngine;
 
 namespace Max_Players
 {
@@ -14,7 +13,7 @@ namespace Max_Players
         private static bool Prefix(PLServer __instance, ref int playerID, ref int classID, ref List<PLPlayer> ___LocalCachedPlayerByClass)
         {
             //runs vanilla if client isn't hosting
-            if(!PhotonNetwork.isMasterClient)
+            if (!PhotonNetwork.isMasterClient)
             {
                 return false;
             }
@@ -41,9 +40,9 @@ namespace Max_Players
                 else
                 {
                     string options = "";
-                    for (int classid = 0; classid <5; classid++)
+                    for (int classid = 0; classid < 5; classid++)
                     {
-                        if(Global.CanJoinClass(classid))
+                        if (Global.CanJoinClass(classid))
                         {
                             options += $"{PLPlayer.GetClassNameFromID(classid)}\n";
                         }
