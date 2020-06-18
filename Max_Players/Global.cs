@@ -5,6 +5,7 @@
         public static int[] rolelimits = new int[5] { 1, 63, 63, 63, 63 };
         public static int MaxPlayers = byte.MaxValue;
         public static int[] playercount = new int[6];
+        public static int[] roleleads = new int[5];
         public static int GetClassTypeFromString(string instring, out bool Successfull)
         {
             Successfull = true;

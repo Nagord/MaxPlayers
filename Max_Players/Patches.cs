@@ -15,18 +15,21 @@ namespace Max_Players
             //runs vanilla if client isn't hosting
             if (!PhotonNetwork.isMasterClient)
             {
-                return false;
+                return true;
             }
-            //fails if client trying to be class -1 through 4
+            PLPlayer PlayerFromID = PLServer.Instance.GetPlayerFromPlayerID(playerID);
+            if (Global.MaxPlayers == 5)
+            {
+                return true;
+            }
+                //fails if client trying to be class -1 through 4
             if (classID > 4 || classID < -1)
             {
                 return false;
             }
-
             //Gets Player from Method PlayerID
             //format: classid+1; playercount
-            PLPlayer PlayerFromID = PLServer.Instance.GetPlayerFromPlayerID(playerID);
-
+            
             if (PlayerFromID != null)
             {
                 Global.Generateplayercount();
@@ -59,21 +62,20 @@ namespace Max_Players
             return false;
         }
     }
-    //[HarmonyPatch(typeof(PLServer))]
-    //[HarmonyPatch("UpdateCachedValues")]
-    //internal class CachedValues
-    //{
-    //    private static void Postfix(ref List<PLPlayer> ___LocalCachedPlayerByClass)
-    //    {
-    //        for(int i = 0; i < 5; i++)
-    //        {
-    //            int playerid = Global.roleleads[i];
-    //            PLPlayer RoleLead = PLServer.Instance.GetPlayerFromPlayerID(playerid);
-    //            if (RoleLead != null && RoleLead.GetClassID() == i)
-    //            {
-    //                ___LocalCachedPlayerByClass[i] = RoleLead;
-    //            }
-    //        }
-    //    }
-    //}
+    [HarmonyPatch(typeof(PLServer), "UpdateCachedValues")]
+    class CachedValues
+    {
+        private static void Postfix(ref List<PLPlayer> ___LocalCachedPlayerByClass)
+        {
+            for(int i = 0; i < 5; i++)
+            {
+                int playerid = Global.roleleads[i];
+                PLPlayer RoleLead = PLServer.Instance.GetPlayerFromPlayerID(playerid);
+                if (RoleLead != null && RoleLead.GetClassID() == i)
+                {
+                    ___LocalCachedPlayerByClass[i] = RoleLead;
+                }
+            }
+        }
+    }
 }
