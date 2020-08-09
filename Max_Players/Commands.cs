@@ -35,7 +35,7 @@ namespace Max_Players
             return "Runs sub-commands.";
         }
 
-        public bool Execute(string arguments)
+        public bool Execute(string arguments, int SenderID)
         {
             string[] args = new string[2];
             args = arguments.Split(' ');
@@ -277,6 +277,11 @@ namespace Max_Players
         public string UsageExample()
         {
             return $"/{CommandAliases()[0]} [SubCommand] [value] [value(if applicable)]";
+        }
+
+        public bool Execute(string arguments)
+        {
+            return false;
         }
     }
 }
