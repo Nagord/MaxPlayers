@@ -279,7 +279,7 @@ namespace Max_Players
             return $"/{CommandAliases()[0]} [SubCommand] [value] [value(if applicable)]";
         }
 
-        public bool Execute(string arguments)
+        public bool PublicCommand()
         {
             return false;
         }
