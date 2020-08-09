@@ -12,7 +12,7 @@ namespace Max_Players
 
         public override string Name => "Max_Players";
 
-        public override int MPFunctionality => (int)MPFunction.HostApproved;
+        public override int MPFunctionality => (int)MPFunction.HostOnly;
 
         public override string HarmonyIdentifier()
 		{

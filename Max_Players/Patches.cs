@@ -18,10 +18,6 @@ namespace Max_Players
                 return true;
             }
             PLPlayer PlayerFromID = PLServer.Instance.GetPlayerFromPlayerID(playerID);
-            if (Global.MaxPlayers == 5)
-            {
-                return true;
-            }
                 //fails if client trying to be class -1 through 4
             if (classID > 4 || classID < -1)
             {
@@ -55,7 +51,7 @@ namespace Max_Players
                         options = "none";
                     }
                     Messaging.Centerprint("That slot is full, choose another one. options on the left", PlayerFromID, "ROL", PLPlayer.GetClassColorFromID(classID), EWarningType.E_RACE_WIN);
-                    Messaging.Notification(options, PlayerFromID, playerID, 10000);
+                    Messaging.Notification(options, PlayerFromID, playerID, 10000 + PLServer.Instance.GetEstimatedServerMs());
                     Messaging.Notification($"Player {PlayerFromID.GetPlayerName()} Is trying to join as {PLPlayer.GetClassNameFromID(classID)}");
                 }
             }

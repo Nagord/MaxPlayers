@@ -13,9 +13,9 @@ namespace Max_Players
     [HarmonyPatch(typeof(PLServer), "LoginMessage")]
     class PlayerConnectedPatch //used to sync the client with the host's settings
     {
-        static void PostFix(ref PhotonPlayer newPhotonPlayer)
+        static void Postfix(ref PhotonPlayer newPhotonPlayer)
         {
-            if (PhotonNetwork.isMasterClient && Global.MaxPlayers != 5 && ModMessageHelper.Instance.GetPlayerMods(newPhotonPlayer).Contains(ModMessageHelper.Instance.GetModName("Max_Players")))
+            if (PhotonNetwork.isMasterClient && ModMessageHelper.Instance.GetPlayerMods(newPhotonPlayer).Contains(ModMessageHelper.Instance.GetModName("Max_Players")))
             {
                 ModMessage.SendRPC("Dragon.Max_Players", "Max_Players.SendRoleLeads", newPhotonPlayer, new object[] { Global.roleleads });
             }
