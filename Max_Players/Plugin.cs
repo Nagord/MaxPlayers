@@ -4,7 +4,7 @@ namespace Max_Players
 {
     public class Plugin : PulsarPlugin
 	{
-        public override string Version => "0.8.0";
+        public override string Version => "0.8.1";
 
         public override string Author => "Dragon, Kell.EngBot, the ModdingTeam";
 
