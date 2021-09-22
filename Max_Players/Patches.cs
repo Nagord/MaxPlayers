@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 using HarmonyLib;
-using PulsarPluginLoader.Utilities;
+using PulsarModLoader.Utilities;
 
 namespace Max_Players
 {

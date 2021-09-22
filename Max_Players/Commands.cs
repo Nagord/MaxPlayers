@@ -1,28 +1,28 @@
-﻿using PulsarPluginLoader;
-using PulsarPluginLoader.Chat.Commands;
-using PulsarPluginLoader.Utilities;
+﻿using PulsarModLoader;
+using PulsarModLoader.Chat.Commands.CommandRouter;
+using PulsarModLoader.Utilities;
 using System.Linq;
 
 namespace Max_Players
 {
-    class Commands : IChatCommand
+    class Commands : ChatCommand
     {
         void SetSavedPlayerLimits()
         {
             PLXMLOptionsIO.Instance.CurrentOptions.SetStringValue("ClassSlotLimits", $"{Global.rolelimits[0]},{Global.rolelimits[1]},{Global.rolelimits[2]},{Global.rolelimits[3]},{Global.rolelimits[4]}");
             PLXMLOptionsIO.Instance.CurrentOptions.SetStringValue("MaxPlayerLimit", $"{Global.MaxPlayers}");
         }
-        public string[] CommandAliases()
+        public override string[] CommandAliases()
         {
             return new string[] { "maxplayers", "mp" };
         }
 
-        public string Description()
+        public override string Description()
         {
             return "Runs sub-commands.";
         }
 
-        public bool Execute(string arguments, int SenderID)
+        public override void Execute(string arguments)
         {
             string[] args = new string[2];
             args = arguments.Split(' ');
@@ -45,6 +45,7 @@ namespace Max_Players
                             //}
                         }
                     }
+                    PLPlayer player = null;
                     switch (LowerCaseArg)
                     {
                         default:
@@ -77,7 +78,7 @@ namespace Max_Players
                                 int classid = CommandArg[0];
                                 if (!ArgConvertSuccess[0])
                                 {
-                                    classid = Global.GetClassTypeFromString(args[1], out ArgConvertSuccess[0]);
+                                    classid = HelperMethods.GetClassIDFromClassName(args[1], out ArgConvertSuccess[0]);
                                 }
                                 if (ArgConvertSuccess[0])
                                 {
@@ -100,10 +101,10 @@ namespace Max_Players
                             break;
                         case "kit":
                             {
-                                PLPlayer player = PLServer.Instance.GetPlayerFromPlayerID(CommandArg[0]);
+                                player = PLServer.Instance.GetPlayerFromPlayerID(CommandArg[0]);
                                 if (!ArgConvertSuccess[0] && args.Length >= 2)
                                 {
-                                    player = PLServer.Instance.GetPlayerFromPlayerID(Global.GetClassTypeFromString(args[1], out ArgConvertSuccess[0]));
+                                    player = PLServer.Instance.GetPlayerFromPlayerID(HelperMethods.GetClassIDFromClassName(args[1], out ArgConvertSuccess[0]));
                                 }
                                 if (ArgConvertSuccess[0])
                                 {
@@ -116,7 +117,14 @@ namespace Max_Players
                                     if (player != null)
                                     {
                                         player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 2, 0, level, 1);
-                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 2);
+                                        if (PLServer.Instance.CrewFactionID == 4)
+                                        {
+                                            player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 2);
+                                        }
+                                        else
+                                        {
+                                            player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 2);
+                                        }
                                         player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, level, 3);
                                     }
                                 }
@@ -129,10 +137,10 @@ namespace Max_Players
                             }
                         case "kit1":
                             {
-                                PLPlayer player1 = PLServer.Instance.GetPlayerFromPlayerID(CommandArg[0]);
+                                player = PLServer.Instance.GetPlayerFromPlayerID(CommandArg[0]);
                                 if (!ArgConvertSuccess[0] && args.Length >= 2)
                                 {
-                                    player1 = PLServer.Instance.GetPlayerFromPlayerID(Global.GetClassTypeFromString(args[1], out ArgConvertSuccess[0]));
+                                    player = PLServer.Instance.GetPlayerFromPlayerID(HelperMethods.GetClassIDFromClassName(args[1], out ArgConvertSuccess[0]));
                                 }
                                 if (ArgConvertSuccess[0])
                                 {
@@ -142,13 +150,20 @@ namespace Max_Players
                                         level = CommandArg[1];
                                     }
 
-                                    if (player1 != null)
+                                    if (player != null)
                                     {
-                                        player1.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 10, 0, level, 1);
-                                        player1.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 12, 0, level, 2);
-                                        player1.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 16, 0, level, 3);
-                                        player1.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 4);
-                                        player1.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, level, 5);
+                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 10, 0, level, 1);
+                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 12, 0, level, 2);
+                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 16, 0, level, 3);
+                                        if (PLServer.Instance.CrewFactionID == 4)
+                                        {
+                                            player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 4);
+                                        }
+                                        else
+                                        {
+                                            player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 4);
+                                        }
+                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, level, 5);
                                     }
                                 }
                                 else
@@ -158,10 +173,10 @@ namespace Max_Players
                                 break;
                             }
                         case "kit2":
-                            PLPlayer player2 = PLServer.Instance.GetPlayerFromPlayerID(CommandArg[0]);
+                            player = PLServer.Instance.GetPlayerFromPlayerID(CommandArg[0]);
                             if (!ArgConvertSuccess[0] && args.Length >= 2)
                             {
-                                player2 = PLServer.Instance.GetPlayerFromPlayerID(Global.GetClassTypeFromString(args[1], out ArgConvertSuccess[0]));
+                                player = PLServer.Instance.GetPlayerFromPlayerID(HelperMethods.GetClassIDFromClassName(args[1], out ArgConvertSuccess[0]));
                             }
                             if (ArgConvertSuccess[0])
                             {
@@ -171,13 +186,20 @@ namespace Max_Players
                                     level = CommandArg[1];
                                 }
 
-                                if (player2 != null)
+                                if (player != null)
                                 {
-                                    player2.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 9, 0, level, 1);
-                                    player2.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 7, 0, level, 2);
-                                    player2.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 26, 0, level, 3);
-                                    player2.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 4);
-                                    player2.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, level, 5);
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 9, 0, level, 1);
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 7, 0, level, 2);
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 26, 0, level, 3);
+                                    if (PLServer.Instance.CrewFactionID == 4)
+                                    {
+                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 4);
+                                    }
+                                    else
+                                    {
+                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 4);
+                                    }
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, level, 5);
                                 }
                             }
                             else
@@ -186,10 +208,10 @@ namespace Max_Players
                             }
                             break;
                         case "kit3":
-                            PLPlayer player3 = PLServer.Instance.GetPlayerFromPlayerID(CommandArg[0]);
+                            player = PLServer.Instance.GetPlayerFromPlayerID(CommandArg[0]);
                             if (!ArgConvertSuccess[0] && args.Length >= 2)
                             {
-                                player3 = PLServer.Instance.GetPlayerFromPlayerID(Global.GetClassTypeFromString(args[1], out ArgConvertSuccess[0]));
+                                player = PLServer.Instance.GetPlayerFromPlayerID(HelperMethods.GetClassIDFromClassName(args[1], out ArgConvertSuccess[0]));
                             }
                             if (ArgConvertSuccess[0])
                             {
@@ -199,13 +221,20 @@ namespace Max_Players
                                     level = CommandArg[1];
                                 }
 
-                                if (player3 != null)
+                                if (player != null)
                                 {
-                                    player3.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 2, 0, level, 1);
-                                    player3.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 19, 0, level, 2);
-                                    player3.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 33, 0, level, 3);
-                                    player3.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 4);
-                                    player3.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, level, 5);
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 2, 0, level, 1);
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 19, 0, level, 2);
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 33, 0, level, 3);
+                                    if (PLServer.Instance.CrewFactionID == 4)
+                                    {
+                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 4);
+                                    }
+                                    else
+                                    {
+                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 4);
+                                    }
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, level, 5);
                                 }
                             }
                             else
@@ -220,18 +249,18 @@ namespace Max_Players
                                 int classid = CommandArg[0];
                                 if (!ArgConvertSuccess[0])
                                 {
-                                    classid = Global.GetClassTypeFromString(args[1], out ArgConvertSuccess[0]);
+                                    classid = HelperMethods.GetClassIDFromClassName(args[1], out ArgConvertSuccess[0]);
                                 }
                                 if (ArgConvertSuccess[0])
                                 {
                                     if (classid > -1 && classid < 5)
                                     {
                                         Global.roleleads[classid] = CommandArg[1];
-                                        foreach (PhotonPlayer player in ModMessageHelper.Instance.PlayersWithMods.Keys)
+                                        foreach (PhotonPlayer photonPlayer in ModMessageHelper.Instance.PlayersWithMods.Keys)
                                         {
-                                            if (ModMessageHelper.Instance.GetPlayerMods(player).Contains(ModMessageHelper.Instance.GetModName("Max_Players")))
+                                            if (ModMessageHelper.Instance.GetPlayerMods(photonPlayer).Contains(ModMessageHelper.Instance.GetModName("Max_Players")))
                                             {
-                                                ModMessage.SendRPC("Dragon.Max_Players", "Max_Players.SendRoleLeads", player, new object[] { Global.roleleads });
+                                                ModMessage.SendRPC("Dragon.Max_Players", "Max_Players.SendRoleLeads", photonPlayer, new object[] { Global.roleleads });
                                             }
                                         }
                                         Messaging.Notification($"Player of ID {CommandArg[1]} is now the role lead of {PLPlayer.GetClassNameFromID(classid)}");
@@ -262,17 +291,16 @@ namespace Max_Players
             {
                 Messaging.Notification("Must be host to perform this action.");
             }
-            return false;
         }
 
-        public string UsageExample()
+        /*public override string[] UsageExamples()
         {
-            return $"/{CommandAliases()[0]} [SubCommand] [value] [value(if applicable)]";
-        }
+            return new string[] { $"/{CommandAliases()[0]} [SubCommand] [value] [value(if applicable)]" };
+        }*/
 
-        public bool PublicCommand()
+        public override string[][] Arguments()
         {
-            return false;
+            return new string[][] { new string[] { "spl", "setplayerlimit", "ssl", "setslotlimit", "kit", "kit1", "kit2", "kit3", "srl", "setrolelead" }, new string[] { "%player", "%class" } };
         }
     }
 }
