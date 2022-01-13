@@ -20,7 +20,7 @@ namespace Max_Players
             };
             List<CodeInstruction> injectedSequence = new List<CodeInstruction>()
             {
-                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Lockers), "PatchMethod")),
+                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(PLTabMenuPatch), "PatchMethod")),
             };
             return PatchBySequence(instructions, targetSequence, injectedSequence, patchMode: PatchMode.REPLACE, CheckMode.NEVER);
         }
