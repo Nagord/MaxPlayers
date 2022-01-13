@@ -39,10 +39,6 @@ namespace Max_Players
                         if (args.Length >= 3)
                         {
                             ArgConvertSuccess[1] = int.TryParse(args[2], out CommandArg[1]);
-                            //if (args.Length >= 4)
-                            //{
-                            //    ArgConvertSuccess[2] = int.TryParse(args[3], out CommandArg[2]);
-                            //}
                         }
                     }
                     PLPlayer player = null;
