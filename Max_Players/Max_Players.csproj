@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Commands.cs" />
     <Compile Include="CompShopFIx.cs" />
+    <Compile Include="GUI.cs" />
     <Compile Include="Lockers.cs" />
     <Compile Include="ModMessages.cs" />
     <Compile Include="Patches.cs" />

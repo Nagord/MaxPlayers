@@ -1,58 +1,72 @@
-﻿using System.Collections.Generic;
-using System.Reflection;
-using HarmonyLib;
+﻿using HarmonyLib;
 using PulsarModLoader.Utilities;
+using System.Collections.Generic;
 
 namespace Max_Players
 {
-    // Token: 0x02000003 RID: 3
     [HarmonyPatch(typeof(PLServer), "SetPlayerAsClassID")]
     internal class Classes
     {
-        // Token: 0x06000003 RID: 3 RVA: 0x00002070 File Offset: 0x00000270
-        private static bool Prefix(PLServer __instance, ref int playerID, ref int classID, ref List<PLPlayer> ___LocalCachedPlayerByClass)
+        static bool CanJoinClass(int classID)
+        {
+            if (classID == -1 || Global.playercount[classID] < Global.rolelimits[classID])
+            {
+                return true;
+            }
+            else return false;
+        }
+        private static bool Prefix(PLServer __instance, ref int playerID, ref int classID, PhotonMessageInfo pmi)
         {
             //runs vanilla if client isn't hosting
             if (!PhotonNetwork.isMasterClient)
             {
                 return true;
             }
-            PLPlayer PlayerFromID = PLServer.Instance.GetPlayerFromPlayerID(playerID);
-                //fails if client trying to be class -1 through 4
-            if (classID > 4 || classID < -1)
+
+            //fails if client not trying to be class -1 through 4
+            if (classID < -1 || classID > 4)
             {
                 return false;
             }
-            //Gets Player from Method PlayerID
-            //format: classid+1; playercount
-            
+
+            //Protect Players from bad actors changing other player's classes.
+            PLPlayer playerForPhotonPlayer = PLServer.GetPlayerForPhotonPlayer(pmi.sender);
+            if (playerForPhotonPlayer != null && playerForPhotonPlayer.GetPlayerID() != playerID)
+            {
+                return false;
+            }
+
+            PLPlayer PlayerFromID = __instance.GetPlayerFromPlayerID(playerID);
             if (PlayerFromID != null)
             {
                 Global.Generateplayercount();
-                if (Global.CanJoinClass(classID) && PlayerFromID.GetClassID() != classID)
+                if (CanJoinClass(classID) && PlayerFromID.GetClassID() != classID)
                 {
                     //sends the classchangemessage, sets the player to the class id
                     PlayerFromID.SetClassID(classID);
-                    MethodInfo classchangemessage = AccessTools.Method(__instance.GetType(), "ClassChangeMessage", null, null);
-                    classchangemessage.Invoke(__instance, new object[] { PlayerFromID.GetPlayerName(false), classID });
+                    AccessTools.Method(__instance.GetType(), "ClassChangeMessage", null, null).Invoke(__instance, new object[] { PlayerFromID.GetPlayerName(false), classID });
                 }
-                else
+                else //Couldn't become role, send available options.
                 {
                     string options = "";
                     for (int classid = 0; classid < 5; classid++)
                     {
-                        if (Global.CanJoinClass(classid))
+                        if (CanJoinClass(classid))
                         {
                             options += $"{PLPlayer.GetClassNameFromID(classid)}\n";
                         }
                     }
                     if (string.IsNullOrEmpty(options))
                     {
-                        options = "none";
+                        Messaging.Centerprint("There are no slots available. Ask the host to change this or leave.", PlayerFromID, "ROL", PLPlayer.GetClassColorFromID(classID), EWarningType.E_NORMAL);
+                        Messaging.Notification($"Player {PlayerFromID.GetPlayerName()} Is trying to join as {PLPlayer.GetClassNameFromID(classID)}. There are no Roles available.");
                     }
-                    Messaging.Centerprint("That slot is full, choose another one. options on the left", PlayerFromID, "ROL", PLPlayer.GetClassColorFromID(classID), EWarningType.E_RACE_WIN);
-                    Messaging.Notification(options, PlayerFromID, playerID, 10000 + PLServer.Instance.GetEstimatedServerMs());
-                    Messaging.Notification($"Player {PlayerFromID.GetPlayerName()} Is trying to join as {PLPlayer.GetClassNameFromID(classID)}");
+                    else
+                    {
+                        Messaging.Centerprint("That slot is full, choose another one. options on the left", PlayerFromID, "ROL", PLPlayer.GetClassColorFromID(classID), EWarningType.E_NORMAL);
+                        Messaging.Notification(options, PlayerFromID, playerID, 10000 + PLServer.Instance.GetEstimatedServerMs());
+                        Messaging.Notification($"Player {PlayerFromID.GetPlayerName()} Is trying to join as {PLPlayer.GetClassNameFromID(classID)}");
+                    }
                 }
             }
             return false;

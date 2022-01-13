@@ -8,22 +8,15 @@
         public static int[] roleleads = new int[5];
         public static void Generateplayercount()
         {
-            playercount = new int[6];
+            playercount = new int[5];
             foreach (PLPlayer ScannedPlayer in PLServer.Instance.AllPlayers)
             {
-                if (ScannedPlayer != null && ScannedPlayer.TeamID == 0)
+                if (ScannedPlayer != null && ScannedPlayer.TeamID == 0 && ScannedPlayer.GetPlayerID() != -1)
                 {
-                    playercount[ScannedPlayer.GetClassID() + 1]++;
+                    playercount[ScannedPlayer.GetClassID()]++;
                 }
             }
         }
-        public static bool CanJoinClass(int classID)
-        {
-            if (classID == -1 || Global.playercount[classID + 1] < Global.rolelimits[classID])
-            {
-                return true;
-            }
-            else return false;
-        }
+        
     }
 }
