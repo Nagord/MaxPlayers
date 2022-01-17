@@ -15,7 +15,7 @@ namespace Max_Players
                     Global.rolelimits[i] = int.Parse(limits[i]);
                 }
             }
-            Global.MaxPlayers = PLXMLOptionsIO.Instance.CurrentOptions.GetStringValueAsInt("MaxPlayerLimit");
+            Global.MaxPlayers = (byte)PLXMLOptionsIO.Instance.CurrentOptions.GetStringValueAsInt("MaxPlayerLimit");
         }
 
         public override string Version => "0.8.2";

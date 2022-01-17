@@ -57,7 +57,7 @@ namespace Max_Players
                                     Messaging.Notification("Cannot input a value higher than 255");
                                     break;
                                 }
-                                Global.MaxPlayers = CommandArg[0];
+                                Global.MaxPlayers = (byte)CommandArg[0];
                                 PLXMLOptionsIO.Instance.CurrentOptions.SetStringValue("MaxPlayerLimit", $"{Global.MaxPlayers}");
                                 PhotonNetwork.room.MaxPlayers = CommandArg[0];
                                 Messaging.Notification($"set room player limit to {CommandArg[0]}");
@@ -79,11 +79,18 @@ namespace Max_Players
                                 if (ArgConvertSuccess[0])
                                 {
                                     Global.rolelimits[classid] = CommandArg[1];
-                                    Global.MaxPlayers = Global.rolelimits.Sum();
-                                    if (Global.MaxPlayers > byte.MaxValue)
+
+                                    //Protect against rolelimits.sum being greater than 255
+                                    int num = Global.rolelimits.Sum();
+                                    if (num > 255)
                                     {
-                                        Global.MaxPlayers = byte.MaxValue;
+                                        Global.MaxPlayers = 255;
                                     }
+                                    else
+                                    {
+                                        Global.MaxPlayers = (byte)num;
+                                    }
+
                                     PhotonNetwork.room.MaxPlayers = Global.MaxPlayers;
                                     Messaging.Notification($"{PLPlayer.GetClassNameFromID(classid)} player limit set to {CommandArg[1]}. Player limit is now {Global.MaxPlayers}");
                                     SetSavedPlayerLimits();
@@ -115,7 +122,7 @@ namespace Max_Players
                                         player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 2, 0, level, 1);
                                         if (PLServer.Instance.CrewFactionID == 4)
                                         {
-                                            player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 2);
+                                            player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 24, 0, level, 2);
                                         }
                                         else
                                         {
@@ -153,7 +160,7 @@ namespace Max_Players
                                         player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 16, 0, level, 3);
                                         if (PLServer.Instance.CrewFactionID == 4)
                                         {
-                                            player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 4);
+                                            player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 24, 0, level, 4);
                                         }
                                         else
                                         {
@@ -189,7 +196,7 @@ namespace Max_Players
                                     player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 26, 0, level, 3);
                                     if (PLServer.Instance.CrewFactionID == 4)
                                     {
-                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 4);
+                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 24, 0, level, 4);
                                     }
                                     else
                                     {
@@ -224,7 +231,7 @@ namespace Max_Players
                                     player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 33, 0, level, 3);
                                     if (PLServer.Instance.CrewFactionID == 4)
                                     {
-                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 4);
+                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 24, 0, level, 4);
                                     }
                                     else
                                     {
