@@ -13,19 +13,29 @@ namespace Max_Players
 
 
             CaptainStyle.alignment = TextAnchor.MiddleCenter;
-            CaptainStyle.normal.textColor = PLPlayer.GetClassColorFromID(0); ;
+            CaptainStyle.normal.textColor = PLPlayer.GetClassColorFromID(0);
+            CaptainStyle.fixedWidth = 100f;
+            CaptainStyle.clipping = TextClipping.Clip;
 
             PilotStyle.alignment = TextAnchor.MiddleCenter;
-            PilotStyle.normal.textColor = PLPlayer.GetClassColorFromID(1); ; 
+            PilotStyle.normal.textColor = PLPlayer.GetClassColorFromID(1);
+            PilotStyle.fixedWidth = 100f;
+            PilotStyle.clipping = TextClipping.Clip;
 
             ScienceStyle.alignment = TextAnchor.MiddleCenter;
-            ScienceStyle.normal.textColor = PLPlayer.GetClassColorFromID(2); ;
+            ScienceStyle.normal.textColor = PLPlayer.GetClassColorFromID(2);
+            ScienceStyle.fixedWidth = 100f;
+            ScienceStyle.clipping = TextClipping.Clip;
 
             WeaponsStyle.alignment = TextAnchor.MiddleCenter;
-            WeaponsStyle.normal.textColor = PLPlayer.GetClassColorFromID(3); ;
+            WeaponsStyle.normal.textColor = PLPlayer.GetClassColorFromID(3);
+            WeaponsStyle.fixedWidth = 100f;
+            WeaponsStyle.clipping = TextClipping.Clip;
 
             EngineerStyle.alignment = TextAnchor.MiddleCenter;
-            EngineerStyle.normal.textColor = PLPlayer.GetClassColorFromID(4); ;
+            EngineerStyle.normal.textColor = PLPlayer.GetClassColorFromID(4);
+            EngineerStyle.fixedWidth = 100f;
+            EngineerStyle.clipping = TextClipping.Clip;
         }
 
         public override void OnOpen()
@@ -34,7 +44,6 @@ namespace Max_Players
             RoleLimits = new string[] { Global.rolelimits[0].ToString(), Global.rolelimits[1].ToString(), Global.rolelimits[2].ToString(), Global.rolelimits[3].ToString(), Global.rolelimits[4].ToString() };
             CandidateRoleLeads = Global.roleleads;
             errorMessage = null;
-            
         }
 
 
@@ -59,21 +68,15 @@ namespace Max_Players
 
         public override void Draw()
         {
-            List<PLPlayer> allPlayers = null;
-            int playercount;
             if (PLServer.Instance == null || !PhotonNetwork.isMasterClient)
             {
                 Label("Host a game to access this menu");
                 return;
             }
-            else
+            ref List<PLPlayer> allPlayers = ref PLServer.Instance.AllPlayers;
+            if (allPlayers.Count < 1)
             {
-                allPlayers = PLServer.Instance.AllPlayers;
-                playercount = allPlayers.Count;
-                if (playercount < 1)
-                {
-                    return;
-                }
+                return;
             }
             Label("Max Player Count");
             MaxPlayerCount = TextField(MaxPlayerCount, normalTextParams);
@@ -118,175 +121,85 @@ namespace Max_Players
 
             BeginHorizontal();
             
-            if(allPlayers.Count < 1)
-            {
-                return;
-            }
             for (int i = 0; i < 5; i++)
             {
-                if (allPlayers[CandidateRoleLeads[i]] == null)
+                if (PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[i]) == null)
                 {
+                    PulsarModLoader.Utilities.Logger.Info("resetting role lead");
                     CandidateRoleLeads[i] = 0;
                 }
             }
-            if (allPlayers[CandidateRoleLeads[0]].GetClassID() == 0)
-                Label(allPlayers[CandidateRoleLeads[0]].GetPlayerName(), CaptainStyle);
+            if (PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[0]).GetClassID() == 0)
+                Label(PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[0]).GetPlayerName(), CaptainStyle);
             else
                 Label("Unassigned", CaptainStyle);
-            if (allPlayers[CandidateRoleLeads[1]].GetClassID() == 1)
-                Label(allPlayers[CandidateRoleLeads[1]].GetPlayerName(), PilotStyle);
+            if (PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[1]).GetClassID() == 1)
+                Label(PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[1]).GetPlayerName(), PilotStyle);
             else
                 Label("Unassigned", PilotStyle);
-            if (allPlayers[CandidateRoleLeads[2]].GetClassID() == 2)
-                Label(allPlayers[CandidateRoleLeads[2]].GetPlayerName(), ScienceStyle);
+            if (PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[2]).GetClassID() == 2)
+                Label(PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[2]).GetPlayerName(), ScienceStyle);
             else
                 Label("Unassigned", ScienceStyle);
-            if (allPlayers[CandidateRoleLeads[3]].GetClassID() == 3)
-                Label(allPlayers[CandidateRoleLeads[3]].GetPlayerName(), WeaponsStyle);
+            if (PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[3]).GetClassID() == 3)
+                Label(PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[3]).GetPlayerName(), WeaponsStyle);
             else
                 Label("Unassigned", WeaponsStyle);
-            if (allPlayers[CandidateRoleLeads[4]].GetClassID() == 4)
-                Label(allPlayers[CandidateRoleLeads[4]].GetPlayerName(), EngineerStyle);
+            if (PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[4]).GetClassID() == 4)
+                Label(PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[4]).GetPlayerName(), EngineerStyle);
             else
                 Label("Unassigned", EngineerStyle);
             EndHorizontal();
 
             BeginHorizontal();
 
+
+            PLPlayer player; //variable to store current player. Declared here so the compiler doesn't create multiple local variables, which saves memory
+
             //Begin Cap
             if (Button("<"))
             {
-                int earlierPlayerID = -1;
-                for (int i = 0; i < CandidateRoleLeads[0]; i++)
-                {
-                    if (allPlayers[i].GetClassID() == 0 && allPlayers[i].TeamID == 0)
-                    {
-                        earlierPlayerID = i;
-                    }
-                }
-                if (earlierPlayerID != -1 && earlierPlayerID < Global.roleleads[0])
-                {
-                    CandidateRoleLeads[0] = earlierPlayerID;
-                }
+                CandidateRoleLeads[0] = GetLowerPlayerIDOfClass(0, CandidateRoleLeads[0]);
             }
             if (Button(">"))
             {
-                for (int i = CandidateRoleLeads[0]; i < playercount; i++)
-                {
-                    if (allPlayers[i].GetClassID() == 0 && allPlayers[i].TeamID == 0)
-                    {
-                        CandidateRoleLeads[0] = i;
-                        break;
-                    }
-                }
+                CandidateRoleLeads[0] = GetHigherPlayerIDOfClass(0, CandidateRoleLeads[0]);
             }
             //Begin Pilot
             if (Button("<"))
             {
-                int earlierPlayerID = -1;
-                for (int i = 0; i < CandidateRoleLeads[1]; i++)
-                {
-                    if (allPlayers[i].GetClassID() == 1 && allPlayers[i].TeamID == 0)
-                    {
-                        earlierPlayerID = i;
-                    }
-                }
-                if (earlierPlayerID != -1 && earlierPlayerID < Global.roleleads[1])
-                {
-                    CandidateRoleLeads[1] = earlierPlayerID;
-                }
+                CandidateRoleLeads[1] = GetLowerPlayerIDOfClass(1, CandidateRoleLeads[1]);
             }
             if (Button(">"))
             {
-                for (int i = CandidateRoleLeads[1]; i < playercount; i++)
-                {
-                    if (allPlayers[i].GetClassID() == 1 && allPlayers[i].TeamID == 0)
-                    {
-                        CandidateRoleLeads[1] = i;
-                        break;
-                    }
-                }
+                CandidateRoleLeads[1] = GetHigherPlayerIDOfClass(1, CandidateRoleLeads[1]);
             }
             //Begin Sci
             if (Button("<"))
             {
-                int earlierPlayerID = -1;
-                for (int i = 0; i < CandidateRoleLeads[2]; i++)
-                {
-                    if (allPlayers[i].GetClassID() == 2 && allPlayers[i].TeamID == 0)
-                    {
-                        earlierPlayerID = i;
-                    }
-                }
-                if (earlierPlayerID != -1 && earlierPlayerID < Global.roleleads[2])
-                {
-                    CandidateRoleLeads[2] = earlierPlayerID;
-                }
+                CandidateRoleLeads[2] = GetLowerPlayerIDOfClass(2, CandidateRoleLeads[2]);
             }
             if (Button(">"))
             {
-                for (int i = CandidateRoleLeads[2]; i < playercount; i++)
-                {
-                    if (allPlayers[i].GetClassID() == 2 && allPlayers[i].TeamID == 0)
-                    {
-                        CandidateRoleLeads[2] = i;
-                        break;
-                    }
-                }
+                CandidateRoleLeads[2] = GetHigherPlayerIDOfClass(2, CandidateRoleLeads[2]);
             }
             //Begin Wep
             if (Button("<"))
             {
-                int earlierPlayerID = -1;
-                for (int i = 0; i < CandidateRoleLeads[3]; i++)
-                {
-                    if (allPlayers[i].GetClassID() == 3 && allPlayers[i].TeamID == 0)
-                    {
-                        earlierPlayerID = i;
-                    }
-                }
-                if (earlierPlayerID != -1 && earlierPlayerID < Global.roleleads[3])
-                {
-                    CandidateRoleLeads[3] = earlierPlayerID;
-                }
+                CandidateRoleLeads[3] = GetLowerPlayerIDOfClass(3, CandidateRoleLeads[3]);
             }
             if (Button(">"))
             {
-                for (int i = CandidateRoleLeads[3]; i < playercount; i++)
-                {
-                    if (allPlayers[i].GetClassID() == 3 && allPlayers[i].TeamID == 0)
-                    {
-                        CandidateRoleLeads[3] = i;
-                        break;
-                    }
-                }
+                CandidateRoleLeads[3] = GetHigherPlayerIDOfClass(3, CandidateRoleLeads[3]);
             }
             //Begin Eng
             if (Button("<"))
             {
-                int earlierPlayerID = -1;
-                for (int i = 0; i < CandidateRoleLeads[4]; i++)
-                {
-                    if (allPlayers[i].GetClassID() == 4 && allPlayers[i].TeamID == 0)
-                    {
-                        earlierPlayerID = i;
-                    }
-                }
-                if (earlierPlayerID != -1 && earlierPlayerID < Global.roleleads[4])
-                {
-                    CandidateRoleLeads[4] = earlierPlayerID;
-                }
+                CandidateRoleLeads[4] = GetLowerPlayerIDOfClass(4, CandidateRoleLeads[4]);
             }
             if (Button(">"))
             {
-                for (int i = CandidateRoleLeads[4]; i < playercount; i++)
-                {
-                    if (allPlayers[i].GetClassID() == 4 && allPlayers[i].TeamID == 0)
-                    {
-                        CandidateRoleLeads[4] = i;
-                        break;
-                    }
-                }
+                CandidateRoleLeads[4] = GetHigherPlayerIDOfClass(4, CandidateRoleLeads[4]);
             }
             EndHorizontal();
 
@@ -328,6 +241,41 @@ namespace Max_Players
                 Global.rolelimits = roleLimitsResults;
                 Global.roleleads = CandidateRoleLeads;
             }
+        }
+        public static int GetLowerPlayerIDOfClass(int classID, int playerID)
+        {
+            int earlierPlayerID = 0;
+            foreach (PLPlayer player in PLServer.Instance.AllPlayers)
+            {
+                if(player != null && player.GetClassID() == classID && player.TeamID == 0)
+                {
+                    if (player.GetPlayerID() < playerID)
+                    {
+                        earlierPlayerID = player.GetPlayerID();
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+            }
+            return earlierPlayerID;
+        }
+        public static int GetHigherPlayerIDOfClass(int classID, int playerID)
+        {
+            int higherPlayerID = playerID;
+            foreach (PLPlayer player in PLServer.Instance.AllPlayers)
+            {
+                if (player != null && player.GetClassID() == classID && player.TeamID == 0)
+                {
+                    if (player.GetPlayerID() > playerID)
+                    {
+                        higherPlayerID = player.GetPlayerID();
+                        break;
+                    }
+                }
+            }
+            return higherPlayerID;
         }
     }
 }
