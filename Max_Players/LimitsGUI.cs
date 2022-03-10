@@ -153,9 +153,6 @@ namespace Max_Players
 
             BeginHorizontal();
 
-
-            PLPlayer player; //variable to store current player. Declared here so the compiler doesn't create multiple local variables, which saves memory
-
             //Begin Cap
             if (Button("<"))
             {

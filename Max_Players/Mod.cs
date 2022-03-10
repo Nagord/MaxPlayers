@@ -18,7 +18,7 @@ namespace Max_Players
             Global.MaxPlayers = (byte)PLXMLOptionsIO.Instance.CurrentOptions.GetStringValueAsInt("MaxPlayerLimit");
         }
 
-        public override string Version => "0.8.2";
+        public override string Version => "0.9.0";
 
         public override string Author => "Dragon, Kell.EngBot, the ModdingTeam";
 

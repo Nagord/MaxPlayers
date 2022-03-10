@@ -39,8 +39,13 @@ namespace Max_Players
             PLPlayer PlayerFromID = __instance.GetPlayerFromPlayerID(playerID);
             if (PlayerFromID != null)
             {
+                //stop if player is already in the specified class
+                if (PlayerFromID.GetClassID() == classID)
+                {
+                    return false;
+                }
                 Global.Generateplayercount();
-                if (CanJoinClass(classID) && PlayerFromID.GetClassID() != classID)
+                if (CanJoinClass(classID))
                 {
                     //sends the classchangemessage, sets the player to the class id
                     PlayerFromID.SetClassID(classID);
