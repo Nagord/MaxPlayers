@@ -1,5 +1,4 @@
 ﻿using PulsarModLoader;
-using PulsarModLoader.Utilities;
 
 namespace Max_Players
 {

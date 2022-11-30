@@ -2,7 +2,6 @@
 using PulsarModLoader.Chat.Commands.CommandRouter;
 using PulsarModLoader.MPModChecks;
 using PulsarModLoader.Utilities;
-using System.Linq;
 
 namespace Max_Players
 {
