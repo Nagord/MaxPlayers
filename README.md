@@ -28,10 +28,10 @@ Support the developer: https://www.patreon.com/DragonFire47
 - adds GUI for managing player limits and role leaders.
 
 ## Usage
-Commands: (All commands and subcommands can be shortened to their capital letters.)  
+### Commands: (All commands and subcommands can be shortened to their capital letters.)  
 /MaxPlayers - Controlls SubCommands. Usage: /MaxPlayers [SubCommand] [Value] [Value (If applicable)]
 
-SubCommands:  
+### SubCommands:  
 SetSlotLimit - Sets limit on players joining the specified role. Run with no arguments to get current players and limits.  
 Usage: /mp ssl [class letter] [player limit]  
 SetPlayerLimit - Sets Overall Playerlimit. (You may run out of player slots while still gaining players)  
@@ -41,7 +41,7 @@ Usage: /mp srl [class letter] [player id]
 kit - gives players a kit with an optional level  
 Usage: /mp kit/kit[1-3] [playerID] [Optional item levels]  
 
-Kits:  
+### Kits:  
 kit  - Phase Pistol, Repair gun/Multitool, fire extiguisher  
 kit1 - Heavy Beam Pistol, Splitshot, Scanner, Repair gun/Multitool, fire extiguisher  
 kit2 - Burst Rifle, Beam Pistol, Healing beam rifle, Repair gun/Multitool, fire extiguisher  
