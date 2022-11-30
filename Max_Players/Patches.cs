@@ -9,7 +9,7 @@ namespace Max_Players
     {
         static bool CanJoinClass(int classID)
         {
-            if (classID == -1 || Global.playercount[classID] < Global.rolelimits[classID])
+            if (classID == -1 || Global.playercount[classID] < Global.GetRoleLimit(classID))
             {
                 return true;
             }
@@ -68,7 +68,7 @@ namespace Max_Players
                     }
                     else
                     {
-                        Messaging.Centerprint("That slot is full, choose another one. options on the left", PlayerFromID, "ROL", PLPlayer.GetClassColorFromID(classID), EWarningType.E_NORMAL);
+                        Messaging.Centerprint("That slot is full, choose another one. Options on the left", PlayerFromID, "ROL", PLPlayer.GetClassColorFromID(classID), EWarningType.E_NORMAL);
                         Messaging.Notification(options, PlayerFromID, playerID, 10000 + PLServer.Instance.GetEstimatedServerMs());
                         Messaging.Notification($"Player {PlayerFromID.GetPlayerName()} Is trying to join as {PLPlayer.GetClassNameFromID(classID)}");
                     }

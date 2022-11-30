@@ -1,5 +1,6 @@
 ﻿using PulsarModLoader;
 using PulsarModLoader.Chat.Commands.CommandRouter;
+using PulsarModLoader.MPModChecks;
 using PulsarModLoader.Utilities;
 using System.Linq;
 
@@ -7,11 +8,6 @@ namespace Max_Players
 {
     class Commands : ChatCommand
     {
-        void SetSavedPlayerLimits()
-        {
-            PLXMLOptionsIO.Instance.CurrentOptions.SetStringValue("ClassSlotLimits", $"{Global.rolelimits[0]},{Global.rolelimits[1]},{Global.rolelimits[2]},{Global.rolelimits[3]},{Global.rolelimits[4]}");
-            PLXMLOptionsIO.Instance.CurrentOptions.SetStringValue("MaxPlayerLimit", $"{Global.MaxPlayers}");
-        }
         public override string[] CommandAliases()
         {
             return new string[] { "maxplayers", "mp" };
@@ -57,8 +53,7 @@ namespace Max_Players
                                     Messaging.Notification("Cannot input a value higher than 255");
                                     break;
                                 }
-                                Global.MaxPlayers = (byte)CommandArg[0];
-                                PLXMLOptionsIO.Instance.CurrentOptions.SetStringValue("MaxPlayerLimit", $"{Global.MaxPlayers}");
+                                Global.MaxPlayers.Value = (byte)CommandArg[0];
                                 PhotonNetwork.room.MaxPlayers = CommandArg[0];
                                 Messaging.Notification($"set room player limit to {CommandArg[0]}");
                             }
@@ -78,28 +73,31 @@ namespace Max_Players
                                 }
                                 if (ArgConvertSuccess[0])
                                 {
-                                    Global.rolelimits[classid] = CommandArg[1];
+                                    Global.SetRoleLimit(classid, CommandArg[1]);
 
-                                    //Protect against rolelimits.sum being greater than 255
-                                    int num = Global.rolelimits.Sum();
+                                    //Protect against RoleLimits.Value.sum being greater than 255
+                                    int num = 0;
+                                    for(int i = 0; i < 5; i++)
+                                    {
+                                        num += Global.GetRoleLimit(i);
+                                    }
                                     if (num > 255)
                                     {
-                                        Global.MaxPlayers = 255;
+                                        Global.MaxPlayers.Value = 255;
                                     }
                                     else
                                     {
-                                        Global.MaxPlayers = (byte)num;
+                                        Global.MaxPlayers.Value = (byte)num;
                                     }
 
                                     PhotonNetwork.room.MaxPlayers = Global.MaxPlayers;
                                     Messaging.Notification($"{PLPlayer.GetClassNameFromID(classid)} player limit set to {CommandArg[1]}. Player limit is now {Global.MaxPlayers}");
-                                    SetSavedPlayerLimits();
                                 }
                             }
                             else
                             {
                                 Global.Generateplayercount();
-                                Messaging.Notification($"current count : Capacity: \nCap {Global.playercount[1]} : {Global.rolelimits[0]} Pil {Global.playercount[2]} : {Global.rolelimits[1]} \nSci {Global.playercount[3]} : {Global.rolelimits[2]} Wep {Global.playercount[4]} : {Global.rolelimits[3]} Eng {Global.playercount[5]} : {Global.rolelimits[4]}");
+                                Messaging.Notification($"current count : Capacity: \nCap {Global.playercount[1]} : {Global.GetRoleLimit(0)} Pil {Global.playercount[2]} : {Global.GetRoleLimit(1)} \nSci {Global.playercount[3]} : {Global.GetRoleLimit(2)} Wep {Global.playercount[4]} : {Global.GetRoleLimit(3)} Eng {Global.playercount[5]} : {Global.GetRoleLimit(4)}");
                             }
                             break;
                         case "kit":
@@ -259,12 +257,9 @@ namespace Max_Players
                                     if (classid > -1 && classid < 5)
                                     {
                                         Global.roleleads[classid] = CommandArg[1];
-                                        foreach (PhotonPlayer photonPlayer in ModMessageHelper.Instance.PlayersWithMods.Keys)
+                                        foreach (PhotonPlayer photonPlayer in MPModCheckManager.Instance.NetworkedPeersWithMod("Dragon.Max_Players"))
                                         {
-                                            if (ModMessageHelper.Instance.GetPlayerMods(photonPlayer).Contains(ModMessageHelper.Instance.GetModName("Max_Players")))
-                                            {
-                                                ModMessage.SendRPC("Dragon.Max_Players", "Max_Players.SendRoleLeads", photonPlayer, new object[] { Global.roleleads });
-                                            }
+                                            ModMessage.SendRPC("Dragon.Max_Players", "Max_Players.SendRoleLeads", photonPlayer, new object[] { Global.roleleads });
                                         }
                                         Messaging.Notification($"Player of ID {CommandArg[1]} is now the role lead of {PLPlayer.GetClassNameFromID(classid)}");
                                     }

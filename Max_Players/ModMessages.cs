@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using PulsarModLoader;
+using PulsarModLoader.MPModChecks;
 
 namespace Max_Players
 {
@@ -15,7 +16,7 @@ namespace Max_Players
     {
         static void Postfix(ref PhotonPlayer newPhotonPlayer)
         {
-            if (PhotonNetwork.isMasterClient && ModMessageHelper.Instance.GetPlayerMods(newPhotonPlayer).Contains(ModMessageHelper.Instance.GetModName("Max_Players")))
+            if (PhotonNetwork.isMasterClient && MPModCheckManager.Instance.NetworkedPeerHasMod(newPhotonPlayer, "Dragon.Max_Players"))
             {
                 ModMessage.SendRPC("Dragon.Max_Players", "Max_Players.SendRoleLeads", newPhotonPlayer, new object[] { Global.roleleads });
             }

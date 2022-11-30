@@ -1,4 +1,5 @@
 ﻿using PulsarModLoader.CustomGUI;
+using PulsarModLoader.Utilities;
 using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.GUILayout;
@@ -14,35 +15,35 @@ namespace Max_Players
 
             CaptainStyle.alignment = TextAnchor.MiddleCenter;
             CaptainStyle.normal.textColor = PLPlayer.GetClassColorFromID(0);
-            CaptainStyle.fixedWidth = 100f;
+            CaptainStyle.fixedWidth = 105f;
             CaptainStyle.clipping = TextClipping.Clip;
 
             PilotStyle.alignment = TextAnchor.MiddleCenter;
             PilotStyle.normal.textColor = PLPlayer.GetClassColorFromID(1);
-            PilotStyle.fixedWidth = 100f;
+            PilotStyle.fixedWidth = 105f;
             PilotStyle.clipping = TextClipping.Clip;
 
             ScienceStyle.alignment = TextAnchor.MiddleCenter;
             ScienceStyle.normal.textColor = PLPlayer.GetClassColorFromID(2);
-            ScienceStyle.fixedWidth = 100f;
+            ScienceStyle.fixedWidth = 105f;
             ScienceStyle.clipping = TextClipping.Clip;
 
             WeaponsStyle.alignment = TextAnchor.MiddleCenter;
             WeaponsStyle.normal.textColor = PLPlayer.GetClassColorFromID(3);
-            WeaponsStyle.fixedWidth = 100f;
+            WeaponsStyle.fixedWidth = 105f;
             WeaponsStyle.clipping = TextClipping.Clip;
 
             EngineerStyle.alignment = TextAnchor.MiddleCenter;
             EngineerStyle.normal.textColor = PLPlayer.GetClassColorFromID(4);
-            EngineerStyle.fixedWidth = 100f;
+            EngineerStyle.fixedWidth = 105f;
             EngineerStyle.clipping = TextClipping.Clip;
         }
 
         public override void OnOpen()
         {
             MaxPlayerCount = Global.MaxPlayers.ToString();
-            RoleLimits = new string[] { Global.rolelimits[0].ToString(), Global.rolelimits[1].ToString(), Global.rolelimits[2].ToString(), Global.rolelimits[3].ToString(), Global.rolelimits[4].ToString() };
-            CandidateRoleLeads = Global.roleleads;
+            RoleLimits = new string[] { Global.GetRoleLimit(0).ToString(), Global.GetRoleLimit(1).ToString(), Global.GetRoleLimit(2).ToString(), Global.GetRoleLimit(3).ToString(), Global.GetRoleLimit(4).ToString() };
+            Global.roleleads.CopyTo(CandidateRoleLeads, 0);
             errorMessage = null;
         }
 
@@ -54,7 +55,7 @@ namespace Max_Players
 
         string[] RoleLimits;
         string MaxPlayerCount;
-        int[] CandidateRoleLeads;
+        int[] CandidateRoleLeads = new int[5];
         string errorMessage = null;
 
         GUILayoutOption[] normalTextParams = { MaxWidth(40f) };
@@ -234,9 +235,13 @@ namespace Max_Players
                 }
 
                 errorMessage = null;
-                Global.MaxPlayers = result;
-                Global.rolelimits = roleLimitsResults;
-                Global.roleleads = CandidateRoleLeads;
+                Global.MaxPlayers.Value = result;
+                for(byte i = 0; i < 5; i++)
+                {
+                    Global.SetRoleLimit(i, roleLimitsResults[i]);
+                }
+                CandidateRoleLeads.CopyTo(Global.roleleads, 0);
+                Messaging.Notification("<color=green>Success!</color>");
             }
         }
         public static int GetLowerPlayerIDOfClass(int classID, int playerID)
