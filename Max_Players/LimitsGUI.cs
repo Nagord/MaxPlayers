@@ -1,4 +1,6 @@
-﻿using PulsarModLoader.CustomGUI;
+﻿using PulsarModLoader;
+using PulsarModLoader.CustomGUI;
+using PulsarModLoader.MPModChecks;
 using PulsarModLoader.Utilities;
 using System.Collections.Generic;
 using UnityEngine;
@@ -241,6 +243,10 @@ namespace Max_Players
                     Global.SetRoleLimit(i, roleLimitsResults[i]);
                 }
                 CandidateRoleLeads.CopyTo(Global.roleleads, 0);
+                foreach(PhotonPlayer player in MPModCheckManager.Instance.NetworkedPeersWithMod("Dragon.Max_Players"))
+                {
+                    ModMessage.SendRPC("Dragon.Max_Players", "Max_Players.SendRoleLeads", player, new object[] { Global.roleleads });
+                }
                 Messaging.Notification("<color=green>Success!</color>");
             }
         }
