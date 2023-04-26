@@ -89,11 +89,17 @@ namespace Max_Players
             Label("Player Limits");
 
             BeginHorizontal();
+            FlexibleSpace();
             Label("Captain", CaptainStyle);
+            FlexibleSpace();
             Label("Pilot", PilotStyle);
+            FlexibleSpace();
             Label("Science", ScienceStyle);
+            FlexibleSpace();
             Label("Weapons", WeaponsStyle);
+            FlexibleSpace();
             Label("Engineer", EngineerStyle);
+            FlexibleSpace();
             EndHorizontal();
 
             BeginHorizontal();
@@ -115,11 +121,17 @@ namespace Max_Players
             Label("Role Leaders");
 
             BeginHorizontal();
+            FlexibleSpace();
             Label("Captain", CaptainStyle);
+            FlexibleSpace();
             Label("Pilot", PilotStyle);
+            FlexibleSpace();
             Label("Science", ScienceStyle);
+            FlexibleSpace();
             Label("Weapons", WeaponsStyle);
+            FlexibleSpace();
             Label("Engineer", EngineerStyle);
+            FlexibleSpace();
             EndHorizontal();
 
             BeginHorizontal();
@@ -132,30 +144,37 @@ namespace Max_Players
                     CandidateRoleLeads[i] = 0;
                 }
             }
+            FlexibleSpace();
             if (PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[0]).GetClassID() == 0)
                 Label(PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[0]).GetPlayerName(), CaptainStyle);
             else
                 Label("Unassigned", CaptainStyle);
+            FlexibleSpace();
             if (PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[1]).GetClassID() == 1)
                 Label(PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[1]).GetPlayerName(), PilotStyle);
             else
                 Label("Unassigned", PilotStyle);
+            FlexibleSpace();
             if (PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[2]).GetClassID() == 2)
                 Label(PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[2]).GetPlayerName(), ScienceStyle);
             else
                 Label("Unassigned", ScienceStyle);
+            FlexibleSpace();
             if (PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[3]).GetClassID() == 3)
                 Label(PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[3]).GetPlayerName(), WeaponsStyle);
             else
                 Label("Unassigned", WeaponsStyle);
+            FlexibleSpace();
             if (PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[4]).GetClassID() == 4)
                 Label(PLServer.Instance.GetPlayerFromPlayerID(CandidateRoleLeads[4]).GetPlayerName(), EngineerStyle);
             else
                 Label("Unassigned", EngineerStyle);
+            FlexibleSpace();
             EndHorizontal();
 
-            BeginHorizontal();
 
+            BeginHorizontal();
+            FlexibleSpace();
             //Begin Cap
             if (Button("<"))
             {
@@ -165,6 +184,7 @@ namespace Max_Players
             {
                 CandidateRoleLeads[0] = GetHigherPlayerIDOfClass(0, CandidateRoleLeads[0]);
             }
+            FlexibleSpace();
             //Begin Pilot
             if (Button("<"))
             {
@@ -174,6 +194,7 @@ namespace Max_Players
             {
                 CandidateRoleLeads[1] = GetHigherPlayerIDOfClass(1, CandidateRoleLeads[1]);
             }
+            FlexibleSpace();
             //Begin Sci
             if (Button("<"))
             {
@@ -183,6 +204,7 @@ namespace Max_Players
             {
                 CandidateRoleLeads[2] = GetHigherPlayerIDOfClass(2, CandidateRoleLeads[2]);
             }
+            FlexibleSpace();
             //Begin Wep
             if (Button("<"))
             {
@@ -192,6 +214,7 @@ namespace Max_Players
             {
                 CandidateRoleLeads[3] = GetHigherPlayerIDOfClass(3, CandidateRoleLeads[3]);
             }
+            FlexibleSpace();
             //Begin Eng
             if (Button("<"))
             {
@@ -201,6 +224,7 @@ namespace Max_Players
             {
                 CandidateRoleLeads[4] = GetHigherPlayerIDOfClass(4, CandidateRoleLeads[4]);
             }
+            FlexibleSpace();
             EndHorizontal();
 
 
