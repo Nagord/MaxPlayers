@@ -262,7 +262,8 @@ namespace Max_Players
 
                 errorMessage = null;
                 Global.MaxPlayers.Value = result;
-                for(byte i = 0; i < 5; i++)
+                PhotonNetwork.room.MaxPlayers = result;
+                for (byte i = 0; i < 5; i++)
                 {
                     Global.SetRoleLimit(i, roleLimitsResults[i]);
                 }
