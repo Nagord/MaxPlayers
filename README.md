@@ -7,15 +7,13 @@ For PML Version 0.11.0
 Mod Version 1.0.0  
 Host/Client Requirements: Host | Clients get better experience when installed
 
-Source: https://github.com/DragonFire47/MaxPlayers
-
 Support the developer: https://www.patreon.com/DragonFire47
 
 
 ## Installation 
--have PulsarModLoader installed  
--go to \PULSARLostColony\Mods  
--add the .dll included with this package
+- have PulsarModLoader installed  
+- go to \PULSARLostColony\Mods  
+- add the .dll included with this package
 
 ## Features
 - Increases the player capacity  
@@ -38,7 +36,7 @@ SetPlayerLimit - Sets Overall Playerlimit. (You may run out of player slots whil
 Usage: /mp spl [playerlimit]  
 SetRoleLead - Sets player whose talents matter for their class. (When using this, players without the mod may lose synchronization of aspects related to talents.)  
 Usage: /mp srl [class letter] [player id]  
-kit - gives players a kit with an optional level  
+kit - Gives players a kit with an optional level.  
 Usage: /mp kit/kit[1-3] [playerID] [Optional item levels]  
 
 ### Kits:  
