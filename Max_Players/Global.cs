@@ -1,4 +1,5 @@
 ﻿using PulsarModLoader;
+using PulsarModLoader.Utilities;
 
 namespace Max_Players
 {
@@ -41,6 +42,29 @@ namespace Max_Players
                     return EngLimit.Value;
             }
         }
+
+        /// <summary>
+        /// Get Class ID from ID string or class name.
+        /// </summary>
+        /// <param name="Class"></param>
+        /// <returns>Class ID. -1 if failed to parse.</returns>
+        public static int GetClassIDFromString(string Class)
+        {
+            if (int.TryParse(Class, out int ClassID))
+            {
+                if (ClassID >= -1 || ClassID <= 4)
+                {
+                    return ClassID;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+
+            return HelperMethods.GetClassIDFromClassName(Class, out _);
+        }
+
         public static SaveValue<int> CapLimit = new SaveValue<int>("CapLimit", 1);
         public static SaveValue<int> PilotLimit = new SaveValue<int>("PilotLimit", 63);
         public static SaveValue<int> SciLimit = new SaveValue<int>("SciLimit", 63);
