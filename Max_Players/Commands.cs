@@ -21,21 +21,14 @@ namespace Max_Players
         {
             string[] args = new string[2];
             args = arguments.Split(' ');
-            int[] CommandArg = new int[2];
-            bool[] ArgConvertSuccess = new bool[2];
+            //int[] CommandArg = new int[2];
+            //bool[] ArgConvertSuccess = new bool[2];
+            int kitLevel;
             string LowerCaseArg = args[0].ToLower();
             if (PhotonNetwork.isMasterClient)
             {
                 if (args.Length >= 1 && !string.IsNullOrEmpty(LowerCaseArg))
                 {
-                    if (args.Length >= 2)
-                    {
-                        ArgConvertSuccess[0] = int.TryParse(args[1], out CommandArg[0]);
-                        if (args.Length >= 3)
-                        {
-                            ArgConvertSuccess[1] = int.TryParse(args[2], out CommandArg[1]);
-                        }
-                    }
                     PLPlayer player = null;
                     switch (LowerCaseArg)
                     {
@@ -45,16 +38,16 @@ namespace Max_Players
 
                         case "spl":
                         case "setplayerlimit":
-                            if (ArgConvertSuccess[0])
+                            if (args.Length >= 2 && int.TryParse(args[1], out int playerLimit))
                             {
-                                if (CommandArg[0] > byte.MaxValue)
+                                if (playerLimit > byte.MaxValue)
                                 {
                                     Messaging.Notification("Cannot input a value higher than 255");
                                     break;
                                 }
-                                Global.MaxPlayers.Value = (byte)CommandArg[0];
-                                PhotonNetwork.room.MaxPlayers = CommandArg[0];
-                                Messaging.Notification($"set room player limit to {CommandArg[0]}");
+                                Global.MaxPlayers.Value = (byte)playerLimit;
+                                PhotonNetwork.room.MaxPlayers = playerLimit;
+                                Messaging.Notification($"set room player limit to {playerLimit}");
                             }
                             else
                             {
@@ -63,218 +56,231 @@ namespace Max_Players
                             break;
                         case "ssl":
                         case "setslotlimit":
-                            if (ArgConvertSuccess[1])
+                            if (args.Length >= 3 && int.TryParse(args[2], out int roleLimit))
                             {
-                                int classid = CommandArg[0];
-                                if (!ArgConvertSuccess[0])
-                                {
-                                    classid = HelperMethods.GetClassIDFromClassName(args[1], out ArgConvertSuccess[0]);
-                                }
-                                if (ArgConvertSuccess[0])
-                                {
-                                    Global.SetRoleLimit(classid, CommandArg[1]);
+                                int classID = Global.GetClassIDFromString(args[1]);
 
-                                    //Protect against RoleLimits.Value.sum being greater than 255
-                                    int num = 0;
-                                    for(int i = 0; i < 5; i++)
-                                    {
-                                        num += Global.GetRoleLimit(i);
-                                    }
-                                    if (num > 255)
-                                    {
-                                        Global.MaxPlayers.Value = 255;
-                                    }
-                                    else
-                                    {
-                                        Global.MaxPlayers.Value = (byte)num;
-                                    }
-
-                                    PhotonNetwork.room.MaxPlayers = Global.MaxPlayers;
-                                    Messaging.Notification($"{PLPlayer.GetClassNameFromID(classid)} player limit set to {CommandArg[1]}. Player limit is now {Global.MaxPlayers}");
+                                if (classID == -1)
+                                {
+                                    Messaging.Notification("Could not find class. Provide the class name or ID (class names in displayed order 0-4)");
                                 }
+
+                                Global.SetRoleLimit(classID, roleLimit);
+
+                                //Protect against RoleLimits.Value.sum being greater than 255
+                                int num = 0;
+                                for (int i = 0; i < 5; i++)
+                                {
+                                    num += Global.GetRoleLimit(i);
+                                }
+                                if (num > 255)
+                                {
+                                    Global.MaxPlayers.Value = 255;
+                                }
+                                else
+                                {
+                                    Global.MaxPlayers.Value = (byte)num;
+                                }
+
+                                PhotonNetwork.room.MaxPlayers = Global.MaxPlayers;
+                                Messaging.Notification($"{PLPlayer.GetClassNameFromID(classID)} player limit set to {roleLimit}. Player limit is now {Global.MaxPlayers}");
                             }
                             else
                             {
                                 Global.Generateplayercount();
+                                Messaging.Notification("Usage: /mp ssl [class] [limit]");
                                 Messaging.Notification($"current count : Capacity: \nCap {Global.playercount[1]} : {Global.GetRoleLimit(0)} Pil {Global.playercount[2]} : {Global.GetRoleLimit(1)} \nSci {Global.playercount[3]} : {Global.GetRoleLimit(2)} Wep {Global.playercount[4]} : {Global.GetRoleLimit(3)} Eng {Global.playercount[5]} : {Global.GetRoleLimit(4)}");
                             }
                             break;
                         case "kit":
                             {
-                                player = PLServer.Instance.GetPlayerFromPlayerID(CommandArg[0]);
-                                if (!ArgConvertSuccess[0] && args.Length >= 2)
+                                if (args.Length >= 2)
                                 {
-                                    player = PLServer.Instance.GetPlayerFromPlayerID(HelperMethods.GetClassIDFromClassName(args[1], out ArgConvertSuccess[0]));
-                                }
-                                if (ArgConvertSuccess[0])
-                                {
-                                    int level = 0;
-                                    if (ArgConvertSuccess[1])
-                                    {
-                                        level = CommandArg[1];
-                                    }
-
-                                    if (player != null)
-                                    {
-                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 2, 0, level, 1);
-                                        if (PLServer.Instance.CrewFactionID == 4)
-                                        {
-                                            player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 24, 0, level, 2);
-                                        }
-                                        else
-                                        {
-                                            player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 2);
-                                        }
-                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, level, 3);
-                                    }
+                                    Messaging.Notification("Please provide a player name, ID, or class. Usage: /mp kit [player] [kit level (optional)]");
+                                    break;
                                 }
 
-                                else
+                                player = HelperMethods.GetPlayer(args[1]);
+
+                                if (player == null)
                                 {
-                                    Messaging.Notification("Cannot find specified player. Try using a player id or class letter. Set item levels with a 2nd number. usage: /mp kit p 0");
+                                    Messaging.Notification("Cannot find specified player, provide the player name, ID, or class name. Set item levels with a 2nd number. usage: /mp kit p 0");
+                                    break;
+                                }
+
+                                //Get level
+                                if (args.Length < 2 || !int.TryParse(args[2], out kitLevel))
+                                {
+                                    kitLevel = 0;
+                                }
+
+                                if (player != null)
+                                {
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 2, 0, kitLevel, 1);
+                                    if (PLServer.Instance.CrewFactionID == 4)
+                                    {
+                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 24, 0, kitLevel, 2);
+                                    }
+                                    else
+                                    {
+                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, kitLevel, 2);
+                                    }
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, kitLevel, 3);
                                 }
                                 break;
                             }
                         case "kit1":
                             {
-                                player = PLServer.Instance.GetPlayerFromPlayerID(CommandArg[0]);
-                                if (!ArgConvertSuccess[0] && args.Length >= 2)
+                                if (args.Length >= 2)
                                 {
-                                    player = PLServer.Instance.GetPlayerFromPlayerID(HelperMethods.GetClassIDFromClassName(args[1], out ArgConvertSuccess[0]));
+                                    Messaging.Notification("Please provide a player name, ID, or class. Usage: /mp kit [player] [kit level (optional)]");
+                                    break;
                                 }
-                                if (ArgConvertSuccess[0])
-                                {
-                                    int level = 0;
-                                    if (ArgConvertSuccess[1])
-                                    {
-                                        level = CommandArg[1];
-                                    }
 
-                                    if (player != null)
-                                    {
-                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 10, 0, level, 1);
-                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 12, 0, level, 2);
-                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 16, 0, level, 3);
-                                        if (PLServer.Instance.CrewFactionID == 4)
-                                        {
-                                            player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 24, 0, level, 4);
-                                        }
-                                        else
-                                        {
-                                            player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 4);
-                                        }
-                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, level, 5);
-                                    }
-                                }
-                                else
+                                player = HelperMethods.GetPlayer(args[1]);
+
+                                if (player == null)
                                 {
-                                    Messaging.Notification("Cannot find specified player. Try using a player id or class letter. Set item levels with a 2nd number. usage: /mp kit p 0");
+                                    Messaging.Notification("Cannot find specified player, provide the player name, ID, or class name. Set item levels with a 2nd number. usage: /mp kit p 0");
+                                    break;
+                                }
+
+                                //Get level
+                                if (args.Length < 2 || !int.TryParse(args[2], out kitLevel))
+                                {
+                                    kitLevel = 0;
+                                }
+
+                                if (player != null)
+                                {
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 10, 0, kitLevel, 1);
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 12, 0, kitLevel, 2);
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 16, 0, kitLevel, 3);
+                                    if (PLServer.Instance.CrewFactionID == 4)
+                                    {
+                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 24, 0, kitLevel, 4);
+                                    }
+                                    else
+                                    {
+                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, kitLevel, 4);
+                                    }
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, kitLevel, 5);
                                 }
                                 break;
                             }
                         case "kit2":
-                            player = PLServer.Instance.GetPlayerFromPlayerID(CommandArg[0]);
-                            if (!ArgConvertSuccess[0] && args.Length >= 2)
+                            if (args.Length >= 2)
                             {
-                                player = PLServer.Instance.GetPlayerFromPlayerID(HelperMethods.GetClassIDFromClassName(args[1], out ArgConvertSuccess[0]));
+                                Messaging.Notification("Please provide a player name, ID, or class. Usage: /mp kit [player] [kit level (optional)]");
+                                break;
                             }
-                            if (ArgConvertSuccess[0])
-                            {
-                                int level = 0;
-                                if (ArgConvertSuccess[1])
-                                {
-                                    level = CommandArg[1];
-                                }
 
-                                if (player != null)
-                                {
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 9, 0, level, 1);
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 7, 0, level, 2);
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 26, 0, level, 3);
-                                    if (PLServer.Instance.CrewFactionID == 4)
-                                    {
-                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 24, 0, level, 4);
-                                    }
-                                    else
-                                    {
-                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 4);
-                                    }
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, level, 5);
-                                }
-                            }
-                            else
+                            player = HelperMethods.GetPlayer(args[1]);
+
+                            if (player == null)
                             {
-                                Messaging.Notification("Cannot find specified player. Try using a player id or class letter. Set item levels with a 2nd number. usage: /mp kit p 0");
+                                Messaging.Notification("Cannot find specified player, provide the player name, ID, or class name. Set item levels with a 2nd number. usage: /mp kit p 0");
+                                break;
+                            }
+
+                            //Get level
+                            if (args.Length < 2 || !int.TryParse(args[2], out kitLevel))
+                            {
+                                kitLevel = 0;
+                            }
+
+                            if (player != null)
+                            {
+                                player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 9, 0, kitLevel, 1);
+                                player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 7, 0, kitLevel, 2);
+                                player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 26, 0, kitLevel, 3);
+                                if (PLServer.Instance.CrewFactionID == 4)
+                                {
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 24, 0, kitLevel, 4);
+                                }
+                                else
+                                {
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, kitLevel, 4);
+                                }
+                                player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, kitLevel, 5);
                             }
                             break;
                         case "kit3":
-                            player = PLServer.Instance.GetPlayerFromPlayerID(CommandArg[0]);
-                            if (!ArgConvertSuccess[0] && args.Length >= 2)
+                            if (args.Length >= 2)
                             {
-                                player = PLServer.Instance.GetPlayerFromPlayerID(HelperMethods.GetClassIDFromClassName(args[1], out ArgConvertSuccess[0]));
+                                Messaging.Notification("Please provide a player name, ID, or class. Usage: /mp kit [player] [kit level (optional)]");
+                                break;
                             }
-                            if (ArgConvertSuccess[0])
-                            {
-                                int level = 0;
-                                if (ArgConvertSuccess[1])
-                                {
-                                    level = CommandArg[1];
-                                }
 
-                                if (player != null)
-                                {
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 2, 0, level, 1);
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 19, 0, level, 2);
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 33, 0, level, 3);
-                                    if (PLServer.Instance.CrewFactionID == 4)
-                                    {
-                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 24, 0, level, 4);
-                                    }
-                                    else
-                                    {
-                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, level, 4);
-                                    }
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, level, 5);
-                                }
-                            }
-                            else
+                            player = HelperMethods.GetPlayer(args[1]);
+
+                            if (player == null)
                             {
-                                Messaging.Notification("Cannot find specified player. Try using a player id or class letter. Set item levels with a 2nd number. usage: /mp kit p 0");
+                                Messaging.Notification("Cannot find specified player, provide the player name, ID, or class name. Set item levels with a 2nd number. usage: /mp kit p 0");
+                                break;
+                            }
+
+                            //Get level
+                            if (args.Length < 2 || !int.TryParse(args[2], out kitLevel))
+                            {
+                                kitLevel = 0;
+                            }
+
+                            if (player != null)
+                            {
+                                player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 2, 0, kitLevel, 1);
+                                player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 19, 0, kitLevel, 2);
+                                player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 33, 0, kitLevel, 3);
+                                if (PLServer.Instance.CrewFactionID == 4)
+                                {
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 24, 0, kitLevel, 4);
+                                }
+                                else
+                                {
+                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, kitLevel, 4);
+                                }
+                                player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, kitLevel, 5);
                             }
                             break;
                         case "setrolelead":
                         case "srl":
-                            if (ArgConvertSuccess[1])
+                            if (args.Length < 3)
                             {
-                                int classid = CommandArg[0];
-                                if (!ArgConvertSuccess[0])
-                                {
-                                    classid = HelperMethods.GetClassIDFromClassName(args[1], out ArgConvertSuccess[0]);
-                                }
-                                if (ArgConvertSuccess[0])
-                                {
-                                    if (classid > -1 && classid < 5)
-                                    {
-                                        Global.roleleads[classid] = CommandArg[1];
-                                        foreach (PhotonPlayer photonPlayer in MPModCheckManager.Instance.NetworkedPeersWithMod("Dragon.Max_Players"))
-                                        {
-                                            ModMessage.SendRPC("Dragon.Max_Players", "Max_Players.SendRoleLeads", photonPlayer, new object[] { Global.roleleads });
-                                        }
-                                        Messaging.Notification($"Player of ID {CommandArg[1]} is now the role lead of {PLPlayer.GetClassNameFromID(classid)}");
-                                    }
-                                    else //classid is not in bounds
-                                    {
-                                        Messaging.Notification("Received a number not equal to a number between 0-4");
-                                    }
-                                }
-                                else //Second arg conversion was successfull, first was not.
+                                Messaging.Notification("Did not detect a second argument! Add a class name or class ID (class names in displayed order 0-4)");
+                                break;
+                            }
+
+                            player = HelperMethods.GetPlayer(args[1]);
+
+                            if (player == null)
+                            {
+                                Messaging.Notification("Could not find the specified player. Provide the player name, class name, or player ID.");
+                                break;
+                            }
+
+                            if (player != null)
+                            {
+                                int classID = Global.GetClassIDFromString(args[1]);
+
+                                if (classID == -1)
                                 {
                                     Messaging.Notification("Could not find classID, set it to the first letter of the player's class or their class ID (class names in displayed order 0-4)");
+                                    break;
                                 }
-                            }
-                            else //Second arg conversion was unsuccessfull
-                            {
-                                Messaging.Notification("Did not detect a second argument! Try using a number");
+
+                                if (classID >= 0 && classID <= 4)
+                                {
+                                    Global.roleleads[classID] = player.GetPlayerID();
+                                    foreach (PhotonPlayer photonPlayer in MPModCheckManager.Instance.NetworkedPeersWithMod("Dragon.Max_Players"))
+                                    {
+                                        ModMessage.SendRPC("Dragon.Max_Players", "Max_Players.SendRoleLeads", photonPlayer, new object[] { Global.roleleads });
+                                    }
+                                    Messaging.Notification($"Player of ID {player.GetPlayerName()} is now the role lead of {PLPlayer.GetClassNameFromID(classID)}");
+                                }
+                                else //classid is not in bounds
+                                {
+                                    Messaging.Notification("Received a class ID not between 0 and 4");
+                                }
                             }
                             break;
                     }
