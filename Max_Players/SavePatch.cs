@@ -11,7 +11,7 @@ using static PulsarModLoader.Patches.HarmonyHelpers;
 namespace Max_Players
 {
     [HarmonyPatch(typeof(PLSaveGameIO), "SaveToFile")]
-    class SaveFix
+    class SavePatch
     {
         static void WriteItemCountPatch(BinaryWriter writer, int num, int classID, PLPlayer cachedPlayerOfClass)
         {
@@ -54,7 +54,7 @@ namespace Max_Players
                 new CodeInstruction(OpCodes.Ldloc_S, (byte)23),
                 new CodeInstruction(OpCodes.Ldloc_S, (byte)18),
                 new CodeInstruction(OpCodes.Ldloc_S, (byte)19),
-                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(SaveFix), "WriteItemCountPatch"))
+                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(SavePatch), "WriteItemCountPatch"))
             };
             var Instructions = instructions.ToList();
             for (int i = 0; i < Instructions.Count; i++)

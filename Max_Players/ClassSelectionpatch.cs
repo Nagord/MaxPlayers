@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using PulsarModLoader.Utilities;
-using System.Collections.Generic;
 
 namespace Max_Players
 {
@@ -15,6 +14,7 @@ namespace Max_Players
             }
             else return false;
         }
+
         static bool Prefix(PLServer __instance, ref int playerID, ref int classID, PhotonMessageInfo pmi)
         {
             //runs vanilla if client isn't hosting
@@ -75,22 +75,6 @@ namespace Max_Players
                 }
             }
             return false;
-        }
-    }
-    [HarmonyPatch(typeof(PLServer), "UpdateCachedValues")]
-    class CachedValues
-    {
-        static void Postfix(ref List<PLPlayer> ___LocalCachedPlayerByClass)
-        {
-            for(int i = 0; i < 5; i++)
-            {
-                int playerid = Global.roleleads[i];
-                PLPlayer RoleLead = PLServer.Instance.GetPlayerFromPlayerID(playerid);
-                if (RoleLead != null && RoleLead.GetClassID() == i)
-                {
-                    ___LocalCachedPlayerByClass[i] = RoleLead;
-                }
-            }
         }
     }
 }

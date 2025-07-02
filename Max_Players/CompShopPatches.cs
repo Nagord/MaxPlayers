@@ -2,7 +2,7 @@
 
 namespace Max_Players
 {
-    class CompShopFix
+    class CompShopPatches
     {
         [HarmonyPatch(typeof(PLShop_Exotic1), "CreateInitialWares")]
         class AddOxygenGen
