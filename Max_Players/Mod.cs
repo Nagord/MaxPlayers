@@ -4,9 +4,9 @@ namespace Max_Players
 {
     public class Mod : PulsarMod
 	{
-        public override string Version => "1.0.1";
+        public override string Version => "1.1.0";
 
-        public override string Author => "Dragon, Kell.EngBot, the ModdingTeam";
+        public override string Author => "Dragon, Kell.EngBot, the ModdingTeam, OnHyex";
 
         public override string ShortDescription => "Increases player limit and allows multiple players of one class.";
 
