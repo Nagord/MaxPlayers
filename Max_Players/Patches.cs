@@ -243,10 +243,6 @@ namespace Max_Players
         }
         private static void CreateScrollButtons()
         {
-            //old methodology had to be async and was iffy on working
-            //GameObject ship = global::UnityEngine.GameObject.Instantiate(Resources.Load("NetworkPrefabs/Intrepid") as GameObject);
-            //Task.Delay(500);
-            //GameObject baseArrow = ship.GetComponent<PLIntrepidInfo>().InteriorStatic.transform.Find("ShipWorldUICanvas").Find("DialogueChoiceBG").Find("DialogueChoice_Left").gameObject;
             GameObject UpArrow = new GameObject("SendButtonScrollUp", new Type[]
             {
                 typeof(Image),
@@ -281,9 +277,6 @@ namespace Max_Players
             DownArrow.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
             DownArrow.transform.localRotation = new Quaternion(0, 0, 1, 1);
             DownArrow.GetComponent<Button>().onClick.AddListener(() => ChangeSendItemPageNumber(true));
-            //GameObject.Destroy(ship);
-            //-280
-
         }
         private static void ChangeSendItemPageNumber(bool Down)
         {
@@ -318,14 +311,6 @@ namespace Max_Players
                 PLTabMenu.Instance.SendItem_Targets[i].gameObject.SetActive((i >= SendItemPageNumber * 9 && i < (SendItemPageNumber + 1) * 9));
                 PLTabMenu.Instance.SendItem_Targets[i].transform.localPosition = new Vector3(0, 160 - 55 * i + SendItemPageNumber * 9 * 55, 0);
             }
-        }
-    }
-    [HarmonyPatch(typeof(PLTabMenu), "ClickSendItemOfIndex")]
-    class SendItemOfIndex
-    {
-        static void Postfix(int i)
-        {
-            Messaging.Echo(PLNetworkManager.Instance.LocalPlayer, $"Sending Item: {i}");
         }
     }
 }
