@@ -19,17 +19,15 @@ namespace Max_Players
 
         public override void Execute(string arguments)
         {
-            string[] args = new string[2];
-            args = arguments.Split(' ');
-            //int[] CommandArg = new int[2];
-            //bool[] ArgConvertSuccess = new bool[2];
-            int kitLevel;
+            string[] args = arguments.Split(' ');
             string LowerCaseArg = args[0].ToLower();
             if (PhotonNetwork.isMasterClient)
             {
                 if (args.Length >= 1 && !string.IsNullOrEmpty(LowerCaseArg))
                 {
                     PLPlayer player = null;
+                    int kitLevel;
+
                     switch (LowerCaseArg)
                     {
                         default:
@@ -58,14 +56,14 @@ namespace Max_Players
                         case "setslotlimit":
                             if (args.Length >= 3 && int.TryParse(args[2], out int roleLimit))
                             {
-                                int classID = Global.GetClassIDFromString(args[1]);
+                                int SSLClassID = Global.GetClassIDFromString(args[1]);
 
-                                if (classID == -1)
+                                if (SSLClassID == -1)
                                 {
                                     Messaging.Notification("Could not find class. Provide the class name or ID (class names in displayed order 0-4)");
                                 }
 
-                                Global.SetRoleLimit(classID, roleLimit);
+                                Global.SetRoleLimit(SSLClassID, roleLimit);
 
                                 //Protect against RoleLimits.Value.sum being greater than 255
                                 int num = 0;
@@ -83,7 +81,7 @@ namespace Max_Players
                                 }
 
                                 PhotonNetwork.room.MaxPlayers = Global.MaxPlayers;
-                                Messaging.Notification($"{PLPlayer.GetClassNameFromID(classID)} player limit set to {roleLimit}. Player limit is now {Global.MaxPlayers}");
+                                Messaging.Notification($"{PLPlayer.GetClassNameFromID(SSLClassID)} player limit set to {roleLimit}. Player limit is now {Global.MaxPlayers}");
                             }
                             else
                             {
@@ -94,7 +92,7 @@ namespace Max_Players
                             break;
                         case "kit":
                             {
-                                if (args.Length >= 2)
+                                if (args.Length <= 2)
                                 {
                                     Messaging.Notification("Please provide a player name, ID, or class. Usage: /mp kit [player] [kit level (optional)]");
                                     break;
@@ -109,7 +107,7 @@ namespace Max_Players
                                 }
 
                                 //Get level
-                                if (args.Length < 2 || !int.TryParse(args[2], out kitLevel))
+                                if (args.Length < 3 || !int.TryParse(args[2], out kitLevel))
                                 {
                                     kitLevel = 0;
                                 }
@@ -131,7 +129,7 @@ namespace Max_Players
                             }
                         case "kit1":
                             {
-                                if (args.Length >= 2)
+                                if (args.Length <= 2)
                                 {
                                     Messaging.Notification("Please provide a player name, ID, or class. Usage: /mp kit [player] [kit level (optional)]");
                                     break;
@@ -146,7 +144,7 @@ namespace Max_Players
                                 }
 
                                 //Get level
-                                if (args.Length < 2 || !int.TryParse(args[2], out kitLevel))
+                                if (args.Length < 3 || !int.TryParse(args[2], out kitLevel))
                                 {
                                     kitLevel = 0;
                                 }
@@ -169,7 +167,7 @@ namespace Max_Players
                                 break;
                             }
                         case "kit2":
-                            if (args.Length >= 2)
+                            if (args.Length <= 2)
                             {
                                 Messaging.Notification("Please provide a player name, ID, or class. Usage: /mp kit [player] [kit level (optional)]");
                                 break;
@@ -184,7 +182,7 @@ namespace Max_Players
                             }
 
                             //Get level
-                            if (args.Length < 2 || !int.TryParse(args[2], out kitLevel))
+                            if (args.Length < 3 || !int.TryParse(args[2], out kitLevel))
                             {
                                 kitLevel = 0;
                             }
@@ -206,7 +204,7 @@ namespace Max_Players
                             }
                             break;
                         case "kit3":
-                            if (args.Length >= 2)
+                            if (args.Length <= 2)
                             {
                                 Messaging.Notification("Please provide a player name, ID, or class. Usage: /mp kit [player] [kit level (optional)]");
                                 break;
@@ -221,7 +219,7 @@ namespace Max_Players
                             }
 
                             //Get level
-                            if (args.Length < 2 || !int.TryParse(args[2], out kitLevel))
+                            if (args.Length < 3 || !int.TryParse(args[2], out kitLevel))
                             {
                                 kitLevel = 0;
                             }
@@ -246,11 +244,19 @@ namespace Max_Players
                         case "srl":
                             if (args.Length < 3)
                             {
-                                Messaging.Notification("Did not detect a second argument! Add a class name or class ID (class names in displayed order 0-4)");
+                                Messaging.Notification("Did not recieve 2 arguments. Usage: /mp srl [class] [player]");
                                 break;
                             }
 
-                            player = HelperMethods.GetPlayer(args[1]);
+                            int SRLClassID = Global.GetClassIDFromString(args[1]);
+
+                            if (SRLClassID == -1)
+                            {
+                                Messaging.Notification("Could not find classID, set it to the first letter of the player's class or their class ID (class names in displayed order 0-4)");
+                                break;
+                            }
+
+                            player = HelperMethods.GetPlayer(args[2]);
 
                             if (player == null)
                             {
@@ -258,29 +264,18 @@ namespace Max_Players
                                 break;
                             }
 
-                            if (player != null)
+                            if (SRLClassID >= 0 && SRLClassID <= 4)
                             {
-                                int classID = Global.GetClassIDFromString(args[1]);
-
-                                if (classID == -1)
+                                Global.roleleads[SRLClassID] = player.GetPlayerID();
+                                foreach (PhotonPlayer photonPlayer in MPModCheckManager.Instance.NetworkedPeersWithMod("Dragon.Max_Players"))
                                 {
-                                    Messaging.Notification("Could not find classID, set it to the first letter of the player's class or their class ID (class names in displayed order 0-4)");
-                                    break;
+                                    ModMessage.SendRPC("Dragon.Max_Players", "Max_Players.SendRoleLeads", photonPlayer, new object[] { Global.roleleads });
                                 }
-
-                                if (classID >= 0 && classID <= 4)
-                                {
-                                    Global.roleleads[classID] = player.GetPlayerID();
-                                    foreach (PhotonPlayer photonPlayer in MPModCheckManager.Instance.NetworkedPeersWithMod("Dragon.Max_Players"))
-                                    {
-                                        ModMessage.SendRPC("Dragon.Max_Players", "Max_Players.SendRoleLeads", photonPlayer, new object[] { Global.roleleads });
-                                    }
-                                    Messaging.Notification($"Player of ID {player.GetPlayerName()} is now the role lead of {PLPlayer.GetClassNameFromID(classID)}");
-                                }
-                                else //classid is not in bounds
-                                {
-                                    Messaging.Notification("Received a class ID not between 0 and 4");
-                                }
+                                Messaging.Notification($"Player of ID {player.GetPlayerName()} is now the role lead of {PLPlayer.GetClassNameFromID(SRLClassID)}");
+                            }
+                            else //classid is not in bounds
+                            {
+                                Messaging.Notification("Received a class ID not between 0 and 4");
                             }
                             break;
                     }
