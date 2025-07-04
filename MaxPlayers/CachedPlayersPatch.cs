@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using System.Collections.Generic;
 
-namespace Max_Players
+namespace MaxPlayers
 {
     [HarmonyPatch(typeof(PLServer), "UpdateCachedValues")]
     class CachedPlayersPatch

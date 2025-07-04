@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEngine.GUILayout;
 
-namespace Max_Players
+namespace MaxPlayers
 {
     class LimitsGUI : ModSettingsMenu
     {

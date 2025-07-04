@@ -8,7 +8,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
-namespace Max_Players
+namespace MaxPlayers
 {
     //Patching in the creation of new buttons as needed and handling the updates of the new buttons
     [HarmonyPatch(typeof(PLTabMenu), "UpdatePIDs")]

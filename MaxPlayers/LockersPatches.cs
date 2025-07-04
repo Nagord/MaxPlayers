@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using static PulsarModLoader.Patches.HarmonyHelpers;
 
-namespace Max_Players
+namespace MaxPlayers
 {
     [HarmonyPatch(typeof(PLTabMenu), "OnClickPID")]
     internal class PLTabMenuPatch

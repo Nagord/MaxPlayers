@@ -1,7 +1,7 @@
 ﻿using System;
 using HarmonyLib;
 
-namespace Max_Players
+namespace MaxPlayers
 {
 	// Token: 0x02000005 RID: 5
 	[HarmonyPatch(typeof(PhotonNetwork), "CreateRoom", new Type[] { typeof(string), typeof(RoomOptions), typeof(TypedLobby)})]

@@ -1,6 +1,6 @@
 ﻿using HarmonyLib;
 
-namespace Max_Players
+namespace MaxPlayers
 {
     class CompShopPatches
     {

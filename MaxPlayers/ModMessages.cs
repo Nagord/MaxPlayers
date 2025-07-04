@@ -2,7 +2,7 @@
 using PulsarModLoader;
 using PulsarModLoader.MPModChecks;
 
-namespace Max_Players
+namespace MaxPlayers
 {
     class SendRoleLeads : ModMessage
     {

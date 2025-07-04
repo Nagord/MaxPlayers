@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using PulsarModLoader.Utilities;
 
-namespace Max_Players
+namespace MaxPlayers
 {
     [HarmonyPatch(typeof(PLServer), "SetPlayerAsClassID")]
     internal class Classes

@@ -4,7 +4,7 @@ using PulsarModLoader.MPModChecks;
 using PulsarModLoader.Utilities;
 using System.Collections.Generic;
 
-namespace Max_Players
+namespace MaxPlayers
 {
     class Commands : ChatCommand
     {

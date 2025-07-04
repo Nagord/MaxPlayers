@@ -8,7 +8,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using static PulsarModLoader.Patches.HarmonyHelpers;
 
-namespace Max_Players
+namespace MaxPlayers
 {
     [HarmonyPatch(typeof(PLSaveGameIO), "SaveToFile")]
     class SavePatch

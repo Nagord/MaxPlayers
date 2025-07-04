@@ -1,6 +1,6 @@
 ﻿using PulsarModLoader;
 
-namespace Max_Players
+namespace MaxPlayers
 {
     public class Mod : PulsarMod
 	{
