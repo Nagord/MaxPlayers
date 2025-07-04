@@ -287,7 +287,7 @@ namespace Max_Players
 
         public override string[][] Arguments()
         {
-            return new string[][] { new string[] { "spl", "setplayerlimit", "ssl", "setslotlimit", "kit", "kit1", "kit2", "kit3", "srl", "setrolelead" }, new string[] { "%player_name", "%class_name" } };
+            return new string[][] { new string[] { "spl", "setplayerlimit", "ssl", "setslotlimit", "kit", "kit1", "kit2", "kit3", "srl", "setrolelead" }, new string[] { "%player_name", "%player_role" } };
         }
         private static void SpawnItems(PLPlayer player, List<PLPawnItem> items)
         {
