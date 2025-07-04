@@ -4,17 +4,17 @@ namespace MaxPlayers
 {
     public class Mod : PulsarMod
 	{
-        public override string Version => "1.1.0";
+        public override string Version => MyPluginInfo.PLUGIN_VERSION;
 
-        public override string Author => "Dragon, Kell.EngBot, OnHyex, Pulsar Modding Team";
+        public override string Author => MyPluginInfo.PLUGIN_AUTHORS;
 
-        public override string ShortDescription => "Increases player limit and allows multiple players of one class.";
+        public override string ShortDescription => MyPluginInfo.PLUGIN_DESCRIPTION;
 
-        public override string Name => "Max_Players";
+        public override string Name => MyPluginInfo.USERS_PLUGIN_NAME;
 
         public override string HarmonyIdentifier()
 		{
-			return "Dragon.Max_Players";
+			return MyPluginInfo.PLUGIN_GUID;
 		}
 	}
 }

@@ -256,9 +256,9 @@ namespace MaxPlayers
                             if (SRLClassID >= 0 && SRLClassID <= 4)
                             {
                                 Global.roleleads[SRLClassID] = player.GetPlayerID();
-                                foreach (PhotonPlayer photonPlayer in MPModCheckManager.Instance.NetworkedPeersWithMod("Dragon.Max_Players"))
+                                foreach (PhotonPlayer photonPlayer in MPModCheckManager.Instance.NetworkedPeersWithMod(MyPluginInfo.PLUGIN_GUID))
                                 {
-                                    ModMessage.SendRPC("Dragon.Max_Players", "Max_Players.SendRoleLeads", photonPlayer, new object[] { Global.roleleads });
+                                    ModMessage.SendRPC(MyPluginInfo.PLUGIN_GUID, "MaxPlayers.SendRoleLeads", photonPlayer, new object[] { Global.roleleads });
                                 }
                                 Messaging.Notification($"Player of ID {player.GetPlayerName()} is now the role lead of {PLPlayer.GetClassNameFromID(SRLClassID)}");
                             }

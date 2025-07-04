@@ -268,9 +268,9 @@ namespace MaxPlayers
                     Global.SetRoleLimit(i, roleLimitsResults[i]);
                 }
                 CandidateRoleLeads.CopyTo(Global.roleleads, 0);
-                foreach(PhotonPlayer player in MPModCheckManager.Instance.NetworkedPeersWithMod("Dragon.Max_Players"))
+                foreach(PhotonPlayer player in MPModCheckManager.Instance.NetworkedPeersWithMod(MyPluginInfo.PLUGIN_GUID))
                 {
-                    ModMessage.SendRPC("Dragon.Max_Players", "Max_Players.SendRoleLeads", player, new object[] { Global.roleleads });
+                    ModMessage.SendRPC(MyPluginInfo.PLUGIN_GUID, "MaxPlayers.SendRoleLeads", player, new object[] { Global.roleleads });
                 }
                 Messaging.Notification("<color=green>Success!</color>");
             }

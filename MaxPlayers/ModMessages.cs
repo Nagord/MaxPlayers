@@ -16,9 +16,9 @@ namespace MaxPlayers
     {
         static void Postfix(ref PhotonPlayer newPhotonPlayer)
         {
-            if (PhotonNetwork.isMasterClient && MPModCheckManager.Instance.NetworkedPeerHasMod(newPhotonPlayer, "Dragon.Max_Players"))
+            if (PhotonNetwork.isMasterClient && MPModCheckManager.Instance.NetworkedPeerHasMod(newPhotonPlayer, MyPluginInfo.PLUGIN_GUID))
             {
-                ModMessage.SendRPC("Dragon.Max_Players", "Max_Players.SendRoleLeads", newPhotonPlayer, new object[] { Global.roleleads });
+                ModMessage.SendRPC(MyPluginInfo.PLUGIN_GUID, "MaxPlayers.SendRoleLeads", newPhotonPlayer, new object[] { Global.roleleads });
             }
         }
     }

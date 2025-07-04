@@ -4,6 +4,10 @@
     <OutputType>Library</OutputType>
     <UseWindowsForms>true</UseWindowsForms>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <Version>1.1.0</Version>
+    <AssemblyTitle>Increases player limit and allows multiple players of one class.</AssemblyTitle>
+    <AssemblyName>MaxPlayers</AssemblyName>
+    <RootNamespace>MaxPlayers</RootNamespace>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -20,6 +24,7 @@
     </PackageReference>
     <PackageReference Include="OpenSesame.Net.Compilers.Toolset" Version="4.0.1" />
     <PackageReference Include="PulsarLostColony.GameLibs" Version="1.2.7.2" />
+    <PackageReference Include="VCMT.Thunderstore.DocBuilder" Version="0.2.3" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PulsarModLoader">
