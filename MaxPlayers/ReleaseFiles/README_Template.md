@@ -1,6 +1,6 @@
-[![](https://img.shields.io/badge/-Void_Crew_Modding_Team-111111?style=just-the-label&logo=github&labelColor=24292f)](https://github.com/Void-Crew-Modding-Team)
+[![](https://img.shields.io/badge/-Nagord-111111?style=just-the-label&logo=github&labelColor=24292f)](https://github.com/Nagord)
 ![](https://img.shields.io/badge/Game%20Version-[GameVersion]-111111?style=flat&labelColor=24292f&color=111111)
-[![](https://img.shields.io/discord/1180651062550593536.svg?&logo=discord&logoColor=ffffff&style=flat&label=Discord&labelColor=24292f&color=111111)](https://discord.gg/g2u5wpbMGu "Void Crew Modding Discord")
+[![](https://img.shields.io/discord/458244416562397184.svg?&logo=discord&logoColor=ffffff&style=flat&label=Discord&labelColor=24292f&color=111111)](https://discord.gg/j3Pydn6 "Pulsar Crew Matchup Server")
 
 # [UserModName]
 
@@ -9,38 +9,63 @@ For Game Version [GameVersion]
 Developed by [Authors]  
 Requires: [Dependencies]
 
+Support the developer: https://www.patreon.com/DragonFire47
+
+Source: https://github.com/DragonFire47/MaxPlayers
 
 ---------------------
 
 ### 💡 Function(s)
 
-- [Description]
-
-### 🎮 Client Usage
-
+- Increases the player capacity
+- Modify player joined functionality
+  - Sets cap for classes. default: 1 captain, 63 all other roles.
+  - Send failed to select role to players attempting to join a filled role.
+- Saves and loads player capacity info
+- Sets role leader whose talents matter
+- Adds kit command for multiple players in a class
+- Adds GUI for managing player limits and role leaders.
 - 
+
+### 🎮 Usage
+
+### Commands: (All commands and subcommands can be shortened to their capital letters.)  
+- /MaxPlayers - Controlls SubCommands.  
+  - Usage: /MaxPlayers [SubCommand] [Value] [Value (If applicable)]
+
+### SubCommands:  
+- SetSlotLimit - Sets limit on players joining the specified role. Run with no arguments to get current players and limits.  
+  - Usage: /mp ssl [class letter] [player limit]  
+- SetPlayerLimit - Sets Overall Playerlimit. (You may run out of player slots while still gaining players)  
+  - Usage: /mp spl [playerlimit]  
+- SetRoleLead - Sets player whose talents matter for their class. (When using this, players without the mod may lose synchronization of aspects related to talents.)  
+  - Usage: /mp srl [class letter] [player id]  
+- kit - Gives players a kit with an optional level.  
+  - Usage: /mp kit/kit[1-3] [playerID] [Optional item levels]  
+
+### Kits:  
+- kit  - Phase Pistol, Repair gun/Multitool, fire extiguisher  
+- kit1 - Heavy Beam Pistol, Splitshot, Scanner, Repair gun/Multitool, fire extiguisher  
+- kit2 - Burst Rifle, Beam Pistol, Healing beam rifle, Repair gun/Multitool, fire extiguisher  
+- kit3 - Phase Pistol, Pulse Grenade, Revitalizing Syringe, Repair gun/Multitool, fire extiguisher  
 
 ### 👥 Multiplayer Functionality
 
-# Note to mod developer: Remove all but one, and describe any custom functionality.
 - ✅ Client
-  - Only the client needs this mod.
+  - Clients get better experience when installed
 - ✅ Host
   - Only the host needs this mod.
-- ✅ Session
-  - Requires the room to be marked as Mod_Session for functionality.
-  - Requires the room to be marked as Mod_Session for joining.
-  - Marks the room as Mod_Session when starting session as host.
-  - Marks the room as Mod_Session when hosting.
-- ✅ All
-  - All players must have this mod installed.
 
 ---------------------
 
-## 🔧 Install Instructions - **Install following the normal BepInEx procedure.**
+## 🔧 Install Instructions
 
-Ensure that you have [BepInEx 5](https://thunderstore.io/c/void-crew/p/BepInEx/BepInExPack/) (stable version 5 **MONO**) and [VoidManager](https://thunderstore.io/c/void-crew/p/VoidCrewModdingTeam/VoidManager/) installed.
+- Have PulsarModLoader installed
+- Go to \PULSARLostColony\Mods
+- Add the .dll included with this package
 
-#### ✔️ Mod installation - **Unzip the contents into the BepInEx plugin directory**
+---------------------
 
-Drag and drop `[ModName].dll` into `Void Crew\BepInEx\plugins`
+## Common issues
+- Network stability may be lost with high player counts
+- Max player limit may not update after configuration when current player count matches the limit.
