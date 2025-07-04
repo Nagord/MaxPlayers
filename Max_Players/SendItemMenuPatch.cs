@@ -83,7 +83,7 @@ namespace Max_Players
                 }
                 PLTabMenu.Instance.SendItem_Targets = new UnityEngine.UI.Text[1] { PLTabMenu.Instance.SendItem_Targets[0] };
                 //Add Buttons that allow the menu to scroll
-                CreateScrollButtons();
+                _ = Task.Run(CreateScrollButtons);
                 //Update the Layout of the Send Item Buttons
                 UpdateDisplayedSendItemButtons();
                 //Hide 'selector' as it doesn't seem to do anything
@@ -146,8 +146,9 @@ namespace Max_Players
             }
             return tempSendTargets;
         }
-        private static void CreateScrollButtons()
+        private static async void CreateScrollButtons()
         {
+            await Task.Yield();
             GameObject UpArrow = new GameObject("SendButtonScrollUp", new Type[]
             {
                 typeof(Image),

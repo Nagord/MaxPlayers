@@ -2,6 +2,7 @@
 using PulsarModLoader.Chat.Commands.CommandRouter;
 using PulsarModLoader.MPModChecks;
 using PulsarModLoader.Utilities;
+using System.Collections.Generic;
 
 namespace Max_Players
 {
@@ -87,12 +88,12 @@ namespace Max_Players
                             {
                                 Global.Generateplayercount();
                                 Messaging.Notification("Usage: /mp ssl [class] [limit]");
-                                Messaging.Notification($"current count : Capacity: \nCap {Global.playercount[1]} : {Global.GetRoleLimit(0)} Pil {Global.playercount[2]} : {Global.GetRoleLimit(1)} \nSci {Global.playercount[3]} : {Global.GetRoleLimit(2)} Wep {Global.playercount[4]} : {Global.GetRoleLimit(3)} Eng {Global.playercount[5]} : {Global.GetRoleLimit(4)}");
+                                Messaging.Notification($"current count : Capacity: \nCap {Global.playercount[0]} : {Global.GetRoleLimit(0)} Pil {Global.playercount[1]} : {Global.GetRoleLimit(1)} \nSci {Global.playercount[2]} : {Global.GetRoleLimit(2)} Wep {Global.playercount[3]} : {Global.GetRoleLimit(3)} Eng {Global.playercount[4]} : {Global.GetRoleLimit(4)}");
                             }
                             break;
                         case "kit":
                             {
-                                if (args.Length <= 2)
+                                if (args.Length < 2)
                                 {
                                     Messaging.Notification("Please provide a player name, ID, or class. Usage: /mp kit [player] [kit level (optional)]");
                                     break;
@@ -114,22 +115,19 @@ namespace Max_Players
 
                                 if (player != null)
                                 {
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 2, 0, kitLevel, 1);
-                                    if (PLServer.Instance.CrewFactionID == 4)
+                                    List<PLPawnItem> kit = new List<PLPawnItem>
                                     {
-                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 24, 0, kitLevel, 2);
-                                    }
-                                    else
-                                    {
-                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, kitLevel, 2);
-                                    }
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, kitLevel, 3);
+                                        PLPawnItem.CreateFromInfo(EPawnItemType.E_PHASEPISTOL, 0, kitLevel),
+                                        PLPawnItem.CreateFromInfo(EPawnItemType.E_REPAIRGUN, 0, kitLevel),
+                                        PLPawnItem.CreateFromInfo(EPawnItemType.E_FIREGUN, 0, kitLevel)
+                                    };
+                                    SpawnItems(player, kit);
                                 }
                                 break;
                             }
                         case "kit1":
                             {
-                                if (args.Length <= 2)
+                                if (args.Length < 2)
                                 {
                                     Messaging.Notification("Please provide a player name, ID, or class. Usage: /mp kit [player] [kit level (optional)]");
                                     break;
@@ -151,23 +149,20 @@ namespace Max_Players
 
                                 if (player != null)
                                 {
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 10, 0, kitLevel, 1);
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 12, 0, kitLevel, 2);
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 16, 0, kitLevel, 3);
-                                    if (PLServer.Instance.CrewFactionID == 4)
+                                    List<PLPawnItem> kit2 = new List<PLPawnItem>
                                     {
-                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 24, 0, kitLevel, 4);
-                                    }
-                                    else
-                                    {
-                                        player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, kitLevel, 4);
-                                    }
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, kitLevel, 5);
+                                        PLPawnItem.CreateFromInfo(EPawnItemType.E_RANGER, 0, kitLevel),
+                                        PLPawnItem.CreateFromInfo(EPawnItemType.E_HAND_SHOTGUN, 0, kitLevel),
+                                        PLPawnItem.CreateFromInfo(EPawnItemType.E_SCANNER, 0, kitLevel),
+                                        PLPawnItem.CreateFromInfo(EPawnItemType.E_REPAIRGUN, 0, kitLevel),
+                                        PLPawnItem.CreateFromInfo(EPawnItemType.E_FIREGUN, 0, kitLevel)
+                                    };
+                                    SpawnItems(player, kit2);
                                 }
                                 break;
                             }
                         case "kit2":
-                            if (args.Length <= 2)
+                            if (args.Length < 2)
                             {
                                 Messaging.Notification("Please provide a player name, ID, or class. Usage: /mp kit [player] [kit level (optional)]");
                                 break;
@@ -189,22 +184,19 @@ namespace Max_Players
 
                             if (player != null)
                             {
-                                player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 9, 0, kitLevel, 1);
-                                player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 7, 0, kitLevel, 2);
-                                player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 26, 0, kitLevel, 3);
-                                if (PLServer.Instance.CrewFactionID == 4)
+                                List<PLPawnItem> kit3 = new List<PLPawnItem>
                                 {
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 24, 0, kitLevel, 4);
-                                }
-                                else
-                                {
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, kitLevel, 4);
-                                }
-                                player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, kitLevel, 5);
+                                    PLPawnItem.CreateFromInfo(EPawnItemType.E_BURST_PISTOL, 0, kitLevel),
+                                    PLPawnItem.CreateFromInfo(EPawnItemType.E_PIERCING_BEAM_PISTOL, 0, kitLevel),
+                                    PLPawnItem.CreateFromInfo(EPawnItemType.E_HELD_BEAM_PISTOL_W_HEALING, 0, kitLevel),
+                                    PLPawnItem.CreateFromInfo(EPawnItemType.E_REPAIRGUN, 0, kitLevel),
+                                    PLPawnItem.CreateFromInfo(EPawnItemType.E_FIREGUN, 0, kitLevel)
+                                };
+                                SpawnItems(player, kit3);
                             }
                             break;
                         case "kit3":
-                            if (args.Length <= 2)
+                            if (args.Length < 2)
                             {
                                 Messaging.Notification("Please provide a player name, ID, or class. Usage: /mp kit [player] [kit level (optional)]");
                                 break;
@@ -226,18 +218,15 @@ namespace Max_Players
 
                             if (player != null)
                             {
-                                player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 2, 0, kitLevel, 1);
-                                player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 19, 0, kitLevel, 2);
-                                player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 33, 0, kitLevel, 3);
-                                if (PLServer.Instance.CrewFactionID == 4)
+                                List<PLPawnItem> kit4 = new List<PLPawnItem>
                                 {
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 24, 0, kitLevel, 4);
-                                }
-                                else
-                                {
-                                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 3, 0, kitLevel, 4);
-                                }
-                                player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, 4, 0, kitLevel, 5);
+                                    PLPawnItem.CreateFromInfo(EPawnItemType.E_PHASEPISTOL, 0, kitLevel),
+                                    PLPawnItem.CreateFromInfo(EPawnItemType.E_PULSE_GRENADE, 0, kitLevel),
+                                    PLPawnItem.CreateFromInfo(EPawnItemType.E_SYRINGE, 0, kitLevel),
+                                    PLPawnItem.CreateFromInfo(EPawnItemType.E_REPAIRGUN, 0, kitLevel),
+                                    PLPawnItem.CreateFromInfo(EPawnItemType.E_FIREGUN, 0, kitLevel)
+                                };
+                                SpawnItems(player, kit4);
                             }
                             break;
                         case "setrolelead":
@@ -298,7 +287,41 @@ namespace Max_Players
 
         public override string[][] Arguments()
         {
-            return new string[][] { new string[] { "spl", "setplayerlimit", "ssl", "setslotlimit", "kit", "kit1", "kit2", "kit3", "srl", "setrolelead" }, new string[] { "%player", "%class" } };
+            return new string[][] { new string[] { "spl", "setplayerlimit", "ssl", "setslotlimit", "kit", "kit1", "kit2", "kit3", "srl", "setrolelead" }, new string[] { "%player_name", "%player_role" } };
+        }
+        private static void SpawnItems(PLPlayer player, List<PLPawnItem> items)
+        {
+            List<bool> filledEquipSlots = new List<bool>(6) { false, false, false, false, false, false };
+            foreach (PLPawnItem item in player.MyInventory.AllItems)
+            {
+                if (item.EquipID != -1)
+                {
+                    filledEquipSlots[item.EquipID] = true;
+                }
+            }
+            foreach (PLPawnItem item in items)
+            {
+                if (!item.CanBeEquipped)
+                {
+                    player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, (int)item.PawnItemType, item.SubType, item.Level, -1);
+                }
+                else
+                {
+                    for (int i = 1; i < filledEquipSlots.Count; i++)
+                    {
+                        if (!filledEquipSlots[i])
+                        {
+                            if (item.PawnItemType == EPawnItemType.E_REPAIRGUN && PLServer.Instance.CrewFactionID == 4)
+                            {
+                                item.PawnItemType = EPawnItemType.E_FB_SELL_TOOL;
+                            }
+                            player.MyInventory.UpdateItem(PLServer.Instance.PawnInvItemIDCounter++, (int)item.PawnItemType, item.SubType, item.Level, i);
+                            filledEquipSlots[i] = true;
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 }

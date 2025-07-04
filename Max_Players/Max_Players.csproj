@@ -7,29 +7,37 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DocumentationFile></DocumentationFile>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
   <ItemGroup>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Lib.Harmony" Version="2.2.2" />
+    <PackageReference Include="Lib.Harmony" Version="2.2.2">
+      <IncludeAssets>compile</IncludeAssets>
+      <PrivateAssets>All</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="OpenSesame.Net.Compilers.Toolset" Version="4.0.1" />
     <PackageReference Include="PulsarLostColony.GameLibs" Version="1.2.7.2" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="PulsarModLoader">
-      <HintPath>..\..\..\..\..\..\..\Program Files (x86)\Steam\steamapps\common\PULSARLostColony\PULSAR_LostColony_Data\Managed\PulsarModLoader.dll</HintPath>
+      <HintPath>..\packages\PulsarModLoader.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>SET PLUGIN_DIR="C:\Program Files (x86)\Steam\steamapps\common\PULSARLostColony\Mods\"
+    <PostBuildEvent>SET MOD_DIR="C:\Program Files (x86)\Steam\steamapps\common\PULSARLostColony\Mods\"
 
-IF EXIST %25PLUGIN_DIR%25 (
-    ECHO Copying DLLs to Plugins directory...
-    XCOPY /Y /F "$(TargetPath)" %25PLUGIN_DIR%25
+IF EXIST %MOD_DIR% (
+    ECHO Copying DLLs to Mods directory...
+    XCOPY "$(MSBuildProjectDirectory)\$(OutDir)\bin\Debug\net472" %MOD_DIR% /Y /F
 )</PostBuildEvent>
     <FileVersion>1.1.0</FileVersion>
     <AssemblyVersion>1.1.0</AssemblyVersion>
+    <IncludeSymbols>False</IncludeSymbols>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 </Project>
